@@ -7,7 +7,7 @@
     "test": "jest",
     "dev": "nodemon -L ./server.js",
     "start": "node ./server.js",
-    "lint": "eslint . --ext .js"
+    "lint": "eslint . --ext .js --fix"
   },
   "keywords": [],
   "author": "",
