@@ -16,10 +16,10 @@ jobs:
         with:
           node-version: 18.18.0
       - name: Install dependencies
-        working-directory: ./apps/auth
+        working-directory: ./
         run: npm install
       - name: Run Tests
-        working-directory: ./apps/auth
+        working-directory: ./
         run: npm test
         
 
