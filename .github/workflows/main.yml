@@ -18,6 +18,9 @@ jobs:
       - name: Install dependencies
         working-directory: ./
         run: npm install
+      - name: Lint
+        working-directory: ./
+        run: npm run lint
       - name: Run Tests
         working-directory: ./
         run: npm test

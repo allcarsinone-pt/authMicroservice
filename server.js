@@ -1,5 +1,5 @@
 const makeApp = require('./src/appBuilder')
-const dotenv = require('dotenv')
+//const dotenv = require('dotenv')
 const swaggerDocument = require('./docs/swagger')
 const swaggerUi = require('swagger-ui-express')
 const InMemoryUserRepository = require('./src/repositories/InMemoryUserRepository')
