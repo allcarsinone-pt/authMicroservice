@@ -1,8 +1,8 @@
 name: Authentication Test Workflow
 
 on:
-  pull_request:
-    types: [closed]
+  release:
+    types: [published]
     branches:
       - main
 jobs:
