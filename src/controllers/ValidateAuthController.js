@@ -1,6 +1,6 @@
 const jwt = require('jsonwebtoken')
 const ValidateAuthUseCase = require('../usecases/ValidateAuthUseCase/ValidateAuth.usecase')
-
+const LogService = require('./services/LogService')
 /**
  * @description Controller to validate a user
  * @param {*} userRepository repository of user
@@ -26,10 +26,13 @@ class ValidateAuthController {
       const validateAuthUseCase = new ValidateAuthUseCase(this.userRepository)
       const result = await validateAuthUseCase.execute(user)
       if (!result.success) {
+        LogService.execute({ from: 'authService', data: result.error.message,date: new Date(), status: 'error' })
         return res.status(500).json({ error: result.error.message })
       }
+      LogService.execute({ from: 'authService', data: `${result.data.id}-${result.data.role} validated`, date: new Date(), status: 'info' })
       return res.status(200).json(result.data)
     } catch (error) {
+      await LogService.execute({ from: 'authService', data: error.message, date: new Date(), status: 'error' })
       return res.status(401).json({ error: error.message })
     }
   }
