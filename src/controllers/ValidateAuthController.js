@@ -7,9 +7,10 @@ const LogService = require('./services/LogService')
  * @param {*} secret secret to generate token
  */
 class ValidateAuthController {
-  constructor (userRepository, secret) {
+  constructor (userRepository, secret, logService) {
     this.userRepository = userRepository
     this.secret = secret
+    this.logService = logService
   }
 
   /**
@@ -26,13 +27,13 @@ class ValidateAuthController {
       const validateAuthUseCase = new ValidateAuthUseCase(this.userRepository)
       const result = await validateAuthUseCase.execute(user)
       if (!result.success) {
-        LogService.execute({ from: 'authService', data: result.error.message,date: new Date(), status: 'error' })
+        LogService.execute({ from: 'authService', data: result.error.message,date: new Date(), status: 'error' }, this.logService)
         return res.status(500).json({ error: result.error.message })
       }
-      LogService.execute({ from: 'authService', data: `${result.data.id}-${result.data.role} validated`, date: new Date(), status: 'info' })
+      LogService.execute({ from: 'authService', data: `${result.data.id}-${result.data.role} validated`, date: new Date(), status: 'info' }, this.logService)
       return res.status(200).json(result.data)
     } catch (error) {
-      await LogService.execute({ from: 'authService', data: error.message, date: new Date(), status: 'error' })
+      await LogService.execute({ from: 'authService', data: error.message, date: new Date(), status: 'error' }, this.logService)
       return res.status(401).json({ error: error.message })
     }
   }

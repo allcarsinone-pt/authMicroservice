@@ -3,10 +3,11 @@ const makeApp = require('./src/appBuilder')
 const swaggerDocument = require('./docs/swagger')
 const swaggerUi = require('swagger-ui-express')
 const InMemoryUserRepository = require('./src/repositories/InMemoryUserRepository')
+const RabbitMQAdapter = require('./src/adapters/RabbitMQAdapter')
 
 // dotenv.config()
 
-const app = makeApp(new InMemoryUserRepository())
+const app = makeApp(new InMemoryUserRepository(), new RabbitMQAdapter(process.env.RABBIT_MQ_URI || 'amqp://localhost:5672'))
 
 app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument))
 

@@ -9,8 +9,9 @@ const LogService = require('./services/LogService')
  */
 
 class RegisterUserController {
-  constructor (userRepository) {
+  constructor (userRepository, logService) {
     this.userRepository = userRepository
+    this.logService = logService
   }
 
   /**
@@ -22,15 +23,15 @@ class RegisterUserController {
   async execute (request, response) {
     let { email, name, password, confirmPassword, role } = request.body
     if (!email || !name || !password || !confirmPassword || !role) {
-      await LogService.execute({ from: 'authService', data: 'Missing fields', date: new Date(), status: 'error' })
+      await LogService.execute({ from: 'authService', data: 'Missing fields', date: new Date(), status: 'error' }, this.logService)
       return response.status(400).json({ message: 'Missing fields' })
     }
     if (password.length < 8) {
-      await LogService.execute({ from: 'authService', data: 'Password must be at least 8 characters', date: new Date(), status: 'error' })
+      await LogService.execute({ from: 'authService', data: 'Password must be at least 8 characters', date: new Date(), status: 'error' }, this.logService)
       return response.status(400).json({ message: 'Password must be at least 8 characters' })
     }
     if (password !== confirmPassword) {
-      await LogService.execute({ from: 'authService', data: 'Passwords don\'t match', date: new Date(), status: 'error' })
+      await LogService.execute({ from: 'authService', data: 'Passwords don\'t match', date: new Date(), status: 'error' }, this.logService)
       return response.status(400).json({ message: 'Passwords don t match' })
     }
 
@@ -45,14 +46,14 @@ class RegisterUserController {
     })
 
     if (!user.success) {
-      await LogService.execute({ from: 'authService', data: `${user.error.message}`, date: new Date(), status: 'error' })
+      await LogService.execute({ from: 'authService', data: `${user.error.message}`, date: new Date(), status: 'error' }, this.logService)
       if (user.error.message === 'Email already used' || user.error.message === 'Name is required' || user.error.message === 'Invalid email') {
         return response.status(400).json({ message: user.error.message })
       } else {
         return response.status(500).json({ message: 'Internal server error' })
       }
     }
-    await LogService.execute({ from: 'authService', data: `${user.data.email}-${user.data.role} registered`, date: new Date(), status: 'info' })
+    await LogService.execute({ from: 'authService', data: `${user.data.email}-${user.data.role} registered`, date: new Date(), status: 'info' }, this.logService)
     return response.status(201).json(user.data)
   }
 }
