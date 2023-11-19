@@ -1,6 +1,5 @@
 const pg = require('pg')
 const User = require('../entities/User')
-const { cp } = require('fs')
 class PostgreUserRepository {
   constructor (baseURI) {
     this.baseURI = baseURI
