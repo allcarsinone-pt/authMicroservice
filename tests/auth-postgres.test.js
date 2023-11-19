@@ -7,16 +7,18 @@ const app = makeApp(userRepository)
 const request = require('supertest')(app)
 const bcrypt = require('bcrypt')
 
-const { GenericContainer } = require('testcontainers') 
+const { GenericContainer, PullPolicy} = require('testcontainers') 
 
 
 let container = new GenericContainer('postgres', 'latest')
 let startedContainer
 
+jest.setTimeout(999999)
 
 describe('Tests', () => {
   beforeAll(async () => {
-    startedContainer = await container.withEnvironment({POSTGRES_USER: 'test', POSTGRES_PASSWORD: 'test', POSTGRES_DB: 'test_db'}).withCopyFilesToContainer([{source:'./database/init-database.sql', target:'/docker-entrypoint-initdb.d/init-database.sql'}]).withExposedPorts({host: 5433, container: 5432}).start()
+
+    startedContainer = await container.withEnvironment({POSTGRES_USER: 'test', POSTGRES_PASSWORD: 'test', POSTGRES_DB: 'test_db'}).withCopyFilesToContainer([{source:'./database/init-database.sql', target:'/docker-entrypoint-initdb.d/init-database.sql'}]).withExposedPorts({host: 5433, container: 5432}).withPullPolicy(PullPolicy.defaultPolicy()).start()
     const port = await startedContainer.getMappedPort(5432)
     const host = await startedContainer.getHost()
     const uri = `postgres://test:test@${host}:${port}/test_db`
