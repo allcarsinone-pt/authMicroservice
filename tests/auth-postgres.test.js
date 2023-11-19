@@ -1,4 +1,4 @@
-const { execSync } = require('child_process')
+
 const makeApp = require('../src/appBuilder')
 const User = require('../src/entities/User')
 const PostgreUserRepository = require('../src/repositories/PostgreUserRepository')
