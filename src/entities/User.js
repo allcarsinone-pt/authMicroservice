@@ -6,12 +6,17 @@ class User {
      * @param {*} password password of user
      * @param {*} id id of user, can be a integer, an uuid or a string
      */
-  constructor (name, email, password, role, id = undefined) {
-    this.id = id
-    this.name = name
-    this.email = email
-    this.password = password
-    this.role = role
+  constructor ( user ) {
+    this.id = user.id
+    this.username = user.username
+    this.name = user.name
+    this.email = user.email
+    this.password = user.password
+    this.address = user.address
+    this.city = user.city
+    this.postalcode = user.postalcode
+    this.mobilephone = user.mobilephone
+    this.role = user.role
   }
 
   toJson () {
