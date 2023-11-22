@@ -19,8 +19,9 @@ class User {
     this.role = user.role
   }
 
+  
   toJson () {
-    return { email: this.email, name: this.name, id: this.id, role: this.role }
+    return { id: this.id, username: this.username, name: this.name, email: this.email, password: this.password, address: this.address, city: this.city, postalcode:this.postalcode, mobilephone: this.mobilephone, role: this.role }
   }
 
   /**
@@ -31,14 +32,24 @@ class User {
    * @param {*} id Id of User
    * @returns a new instance of User
    */
-  static create (name, email, password, role, id = undefined) {
+  static create ( user ) {
+    if (!user) {
+      throw new Error('Invalid user')
+    }
+    const { username, name, email, role } = user;
+
     if (name.length === 0) {
       throw new Error('Name is required')
     }
     if (/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) === false) {
       throw new Error('Invalid email')
     }
-    return new User(name, email, password, role, id)
+    if( username.length < 6 )
+      throw new Error('Username is required');
+    if( role.length === 0 )
+      throw new Error('Role is required')
+
+    return new User(user)
   }
 }
 

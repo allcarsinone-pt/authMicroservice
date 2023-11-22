@@ -20,9 +20,10 @@ class RegisterUserController {
    * @param {*} response response object from express
    * @returns response object from express
    */
+  
   async execute (request, response) {
-    let { email, name, password, confirmPassword, role } = request.body
-    if (!email || !name || !password || !confirmPassword || !role) {
+    let { username, name, email, password, confirmPassword, address, city, postalcode, mobilephone, role } = request.body
+    if (!email || !username || !name || !password || !confirmPassword || !role) {
       await LogService.execute({ from: 'authService', data: 'Missing fields', date: new Date(), status: 'error' }, this.logService)
       return response.status(400).json({ message: 'Missing fields' })
     }
@@ -39,9 +40,14 @@ class RegisterUserController {
     password = bcrypt.hashSync(password, salt)
     const usecase = new RegisterUserUseCase(this.userRepository)
     const user = await usecase.execute({
-      name,
-      email,
-      password,
+      username, 
+      name, 
+      email, 
+      password, 
+      address, 
+      city, 
+      postalcode, 
+      mobilephone, 
       role
     })
 

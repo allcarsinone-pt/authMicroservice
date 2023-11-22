@@ -11,7 +11,7 @@ CREATE TABLE users (
     city VARCHAR(50),
     postalcode VARCHAR(20),
     mobilephone VARCHAR(20),
-    email VARCHAR(100) NOT NULL,
+    email VARCHAR(100) NOT NULL
 );
 
 ALTER TABLE users ADD CONSTRAINT unique_email UNIQUE (email);
