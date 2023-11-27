@@ -20,7 +20,7 @@ class RegisterUserController {
    * @param {*} response response object from express
    * @returns response object from express
    */
-
+  
   async execute (request, response) {
     let { username, name, email, password, confirmPassword, address, city, postalcode, mobilephone, role } = request.body
     if (!email || !username || !name || !password || !confirmPassword || !role) {
