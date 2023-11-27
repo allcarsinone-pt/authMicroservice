@@ -1,48 +1,46 @@
-const EditUserUseCase = require('../usecases/EditUserUseCase/EditUser.usecase')
+const DeleteUserUseCase = require('../usecases/DeleteUserUseCase/DeleteUser.usecase')
 const LogService = require('./services/LogService')
 // Acoplado com o express. O req e o res têm de estar aqui ou não vale a pena complicar ?- perguntar ao professor de arquitetura
 
 /**
- * @class EditUserController
- * @description Controller to edit an user
+ * @class DeleteUserController
+ * @description Controller to delete an user
  */
 
-class EditUserController {
+class DeleteUserController {
   constructor (userRepository, logService) {
     this.userRepository = userRepository
     this.logService = logService
   }
 
   /**
-   * @description Method to execute http request to edit an user
+   * @description Method to execute http request to delete an user
    * @param {*} request request object from express
    * @param {*} response response object from express
    * @returns response object from express
    */
   
   async execute (request, response) {
-    let { id, username, name, address, city, postalcode, mobilephone, email, role } = request.body
-    if (!id || !email || !username || !name || !role) {
+    let { id } = request.body
+    if (!id ) {
       await LogService.execute({ from: 'authService', data: 'Missing fields', date: new Date(), status: 'error' }, this.logService)
       return response.status(400).json({ message: 'Missing fields' })
     }
 
-    const usecase = new EditUserUseCase(this.userRepository)
-    const user = await usecase.execute({
-        id, username, name, address, city, postalcode, mobilephone, email, role
-    })
+    const usecase = new DeleteEditUserUseCase(this.userRepository)
+    const user = await usecase.execute({ id })
 
     if (!user.success) {
       await LogService.execute({ from: 'authService', data: `${user.error.message}`, date: new Date(), status: 'error' }, this.logService)
-      if (user.error.message === 'Email already used' || user.error.message === 'Name is required' || user.error.message === 'Invalid user') {
+      if (user.error.message === 'User not found') {
         return response.status(400).json({ message: user.error.message })
       } else {
         return response.status(500).json({ message: 'Internal server error' })
       }
     }
-    await LogService.execute({ from: 'authService', data: `${user.data.id}-${user.data.role} edited`, date: new Date(), status: 'info' }, this.logService)
+    await LogService.execute({ from: 'authService', data: `${user.data.id}-${user.data.role} deleteed`, date: new Date(), status: 'info' }, this.logService)
     return response.status(201).json(user.data)
   }
 }
 
-module.exports = EditUserController
+module.exports = DeleteUserController

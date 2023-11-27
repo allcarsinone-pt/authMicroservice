@@ -52,7 +52,7 @@ class User {
     return new User(user)
   }
 
-    /**
+  /**
    * @description Edit User making the necessary validations
    * @param {*} name Name of user
    * @param {*} email Email of User
@@ -72,12 +72,39 @@ class User {
         throw new Error('Invalid email')
       }
       if( username.length < 6 )
-        throw new Error('Username is required');
+        throw new Error('Username is required and must contain at least 6 characters');
       if( role.length === 0 )
         throw new Error('Role is required')
   
       return new User(user)
     }
+
+  /**
+   * @description Edit User making the necessary validations
+   * @param {*} name Name of user
+   * @param {*} email Email of User
+   * @param {*} username Username of User
+   * @returns a new instance of User
+   */
+  static delete ( user ) {
+    if (!user) {
+      throw new Error('Invalid user')
+    }
+    const { username, name, email, role } = user;
+
+    if (name.length === 0) {
+      throw new Error('Name is required')
+    }
+    if (/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) === false) {
+      throw new Error('Invalid email')
+    }
+    if( username.length < 6 )
+      throw new Error('Username is required');
+    if( role.length === 0 )
+      throw new Error('Role is required')
+
+    return new User(user)
+  }
 }
 
 module.exports = User
