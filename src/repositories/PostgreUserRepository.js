@@ -77,7 +77,7 @@ class PostgreUserRepository {
     const client = new pg.Client(this.baseURI)
     await client.connect()
     
-    const roleq = await client.query('SELECT id, count(id) as cnt FROM roles WHERE name = $1', [1]) // Admin
+    const roleq = await client.query('SELECT id, count(id) as cnt FROM users WHERE role_id = $1', [1]) // Admin
 
     console.log( "ID: " + roleq.rows[0][0] + " - CNT: " + roleq.rows[0][2] );
     if ( roleq.rows[0][0] == 1 && roleq.rows[0][2] <= 1 ) {
