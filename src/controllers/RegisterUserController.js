@@ -39,9 +39,7 @@ class RegisterUserController {
     const salt = bcrypt.genSaltSync(10)
     password = bcrypt.hashSync(password, salt)
     const usecase = new RegisterUserUseCase(this.userRepository)
-    const user = await usecase.execute({
-      username, name, email, password, address, city, postalcode, mobilephone, role
-    })
+    const user = await usecase.execute({ username, name, email, password, address, city, postalcode, mobilephone, role })
 
     if (!user.success) {
       await LogService.execute({ from: 'authService', data: `${user.error.message}`, date: new Date(), status: 'error' }, this.logService)
