@@ -72,40 +72,18 @@ class PostgreUserRepository {
   }
 
   async delete (user) {
-    const { id, roleId } = user
+    const { id } = user
 
     const client = new pg.Client(this.baseURI)
     await client.connect()
     
-    const roleAdmin = 1
-    const roleq = await client.query('SELECT role_id, count(role_id) AS cnt FROM users WHERE role_id = $1 GROUP BY role_id', ['1']) // Admin
+    const query = 'DELETE FROM users WHERE id = $1';
+    const values = [id];
+    await client.query(query, values);
+    console.log( 'User successfully deleted' );
 
-    console.log( "ID: " + roleq.rows[0].role_id + " - CNT: " + roleq.rows[0].cnt );
-    if ( roleq.rows[0].role_id === roleAdmin ) {
-      if( roleq.rows[0].cnt <= 1 ) {
-        console.log('Last admin user cannot be removed')
-        return ({ Message: "Cannot remove last admin" });
-      } else {
-          console.log('allow delete admin user')
-          roleId = roleq.rows[0].id
-      }
-    }
-
-    try {
-      await connection.connect();
-      const query = 'DELETE FROM users WHERE userid = $1';
-      const values = [id];
-      await client.query(query, values);
-      console.log( 'User successfully deleted' );
-      return res.status(200).json({message: 'User successfully deleted.' });
-    }
-    catch(error) {
-        console.log(error); //send to microservice logs
-        return res.status(500).json({ message: 'Error deleting user.' })
-    }
-    finally {
-        client.end();
-    }
+    await client.end();
+    return { id }
   }
 
   async wipe () {

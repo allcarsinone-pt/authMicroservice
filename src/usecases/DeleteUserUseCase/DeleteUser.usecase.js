@@ -26,7 +26,7 @@ class DeleteUserUseCase {
 
       let user = User.delete(deleteUserDto)
       user = await this.userRepository.delete(user)
-      return Result.success(user.toJson())
+      return Result.success(user)
     })
     return withErrorHandling()
   }
