@@ -6,8 +6,9 @@ describe('User entity', () => {
 
     expect(user).toHaveProperty('id', 'user-id')
     expect(user).toHaveProperty('name', 'John Doe')
+    expect(user).toHaveProperty('username', 'JohnUsername')
     expect(user).toHaveProperty('email', 'test@test.com')
-    expect(user).toHaveProperty('password', '123456')
+    expect(user).toHaveProperty('password', '12345678')
     expect(user).toHaveProperty('role', 'test-role')
   })
   it('should throw an error when name is empty', () => {
