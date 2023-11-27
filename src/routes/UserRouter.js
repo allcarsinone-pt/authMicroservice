@@ -29,6 +29,11 @@ router.post('/register', async (req, res) => {
   controller.execute(req, res)
 })
 
+router.put('/edit', async (req, res) => {
+  const controller = req.app.get('editUserController')
+  controller.execute(req, res)
+})
+
 router.post('/login', async (req, res) => {
   const controller = req.app.get('loginController')
   controller.execute(req, res)

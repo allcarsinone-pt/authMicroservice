@@ -40,15 +40,7 @@ class RegisterUserController {
     password = bcrypt.hashSync(password, salt)
     const usecase = new RegisterUserUseCase(this.userRepository)
     const user = await usecase.execute({
-      username, 
-      name, 
-      email, 
-      password, 
-      address, 
-      city, 
-      postalcode, 
-      mobilephone, 
-      role
+      username, name, email, password, address, city, postalcode, mobilephone, role
     })
 
     if (!user.success) {

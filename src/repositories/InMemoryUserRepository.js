@@ -19,6 +19,16 @@ class InMemoryUserRepository {
   }
 
   /**
+  * @description Edites an user on the repository
+  * @param {*} user User object
+  * @returns the added object
+  */
+  async edit (user) {
+    this.users.push(user)
+    return user
+  }
+  
+  /**
    * @description Find an user by email on the repository
    * @param {*} email user email
    * @returns user or undefined
@@ -26,6 +36,15 @@ class InMemoryUserRepository {
   async findByEmail (email) {
     return this.users.find((user) => user.email === email)
   }
+
+  /**
+   * @description Find an user by id on the repository
+   * @param {*} id user id
+   * @returns user or undefined
+   */
+    async findById (id) {
+      return this.users.find((user) => user.id === id)
+    }
 }
 
 module.exports = InMemoryUserRepository
