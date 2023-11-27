@@ -73,35 +73,40 @@ class PostgreUserRepository {
 
   async delete (user) {
     const { id, roleId } = user
+    const roleAdmin = 1
 
     const client = new pg.Client(this.baseURI)
     await client.connect()
-    
-    const roleq = await client.query('SELECT id, count(id) as cnt FROM users WHERE role_id = $1', [1]) // Admin
-
-    console.log( "ID: " + roleq.rows[0][0] + " - CNT: " + roleq.rows[0][2] );
-    if ( roleq.rows[0][0] == 1 && roleq.rows[0][2] <= 1 ) {
-        console.log('Last admin user cannot be removed')
-        return ({ Message: "Cannot remove last admin" });
-    } else {
-        console.log('role exists')
-        roleId = roleExists.rows[0].id
-    }  
 
     try {
-      await connection.connect();
-      const query = 'DELETE FROM users WHERE userid = $1';
-      const values = [id];
-      await client.query(query, values);
-      console.log( 'User successfully deleted' );
-      return res.status(200).json({message: 'User successfully deleted.' });
-    }
-    catch(error) {
-        console.log(error); //send to microservice logs
-        return res.status(500).json({ message: 'Error deleting user.' })
-    }
-    finally {
-        client.end();
+      await client.connect()
+
+      if (roleId === roleAdmin) {
+        // Use parameterized query to prevent SQL injection
+        const roleQuery = await client.query('SELECT count(*) FROM users WHERE role_id = $1', [roleAdmin])
+        // Log the result of the query
+        console.log('ID: ' + roleQuery.rows[0].count)
+
+        if (roleQuery.rows[0].count <= 1) {
+          console.log('Last admin user cannot be removed')
+          return { Message: 'Cannot remove last admin' }
+        }
+      }
+      const deleteQuery = 'DELETE FROM users WHERE userid = $1'
+
+      // Use parameterized query for the delete operation
+      await client.query(deleteQuery, [id])
+      console.log('User successfully deleted')
+
+      const deletedUser = { id, role_id: roleId }
+      return new User(deletedUser)
+    } catch (error) {
+      // Handle errors appropriately (log or throw)
+      console.error('Error deleting user:', error.message)
+      throw new Error('Failed to delete user')
+    } finally {
+      // Always ensure to end the client connection
+      await client.end()
     }
   }
 

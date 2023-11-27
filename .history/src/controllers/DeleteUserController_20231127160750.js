@@ -38,7 +38,7 @@ class DeleteUserController {
         return response.status(500).json({ message: 'Internal server error' })
       }
     }
-    await LogService.execute({ from: 'authService', data: `${user.data.id} deleted`, date: new Date(), status: 'info' }, this.logService)
+    await LogService.execute({ from: 'authService', data: `${user.data.id}-${user.data.role} deleteed`, date: new Date(), status: 'info' }, this.logService)
     return response.status(201).json(user.data)
   }
 }
