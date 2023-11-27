@@ -27,7 +27,7 @@ class DeleteUserController {
       return response.status(400).json({ message: 'Missing fields' })
     }
 
-    const usecase = new DeleteEditUserUseCase(this.userRepository)
+    const usecase = new DeleteUserUseCase(this.userRepository)
     const user = await usecase.execute({ id })
 
     if (!user.success) {

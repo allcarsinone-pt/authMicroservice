@@ -21,12 +21,21 @@ class InMemoryUserRepository {
   /**
   * @description Edites an user on the repository
   * @param {*} user User object
-  * @returns the added object
+  * @returns the edited object
   */
   async edit (user) {
     this.users.push(user)
     return user
   }
+    /**
+  * @description Removes a user from the repository
+  * @param {*} user User object
+  * @returns the removed object
+  */
+    async delete (user) {
+      this.users.push(user)
+      return user
+    }
   
   /**
    * @description Find an user by email on the repository

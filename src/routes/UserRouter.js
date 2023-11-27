@@ -34,6 +34,11 @@ router.put('/edit', async (req, res) => {
   controller.execute(req, res)
 })
 
+router.delete('/delete', async (req, res) => {
+  const controller = req.app.get('deleteUserController')
+  controller.execute(req, res)
+})
+
 router.post('/login', async (req, res) => {
   const controller = req.app.get('loginController')
   controller.execute(req, res)
