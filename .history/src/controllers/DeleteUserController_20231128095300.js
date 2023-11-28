@@ -34,8 +34,6 @@ class DeleteUserController {
       await LogService.execute({ from: 'authService', data: `${user.error.message}`, date: new Date(), status: 'error' }, this.logService)
       if (user.error.message === 'User not found') {
         return response.status(400).json({ message: user.error.message })
-      } else if (user.error.message === 'User cannot be removed as a last admin') {
-        return response.status(400).json({ message: user.error.message })
       } else {
         return response.status(500).json({ message: 'Internal server error' })
       }

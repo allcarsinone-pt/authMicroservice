@@ -24,11 +24,9 @@ class DeleteUserUseCase {
         return Result.failed(new Error('User not found'))
       }
 
-      if (userFound.role === this.ROLE_ADMIN) {
-        const userIsLastAdmin = await this.userRepository.isLastAdmin(deleteUserDto.id)
-        if (userIsLastAdmin) {
-          return Result.failed(new Error('User cannot be removed as a last admin'))
-        }
+      const userIsLastAdmin = await this.userRepository.userIsLastAdmin(deleteUserDto.id)
+      if (!userIsLastAdmin) {
+        return Result.failed(new Error('User cannot be removed as a last admin'))
       }
 
       let user = User.delete(deleteUserDto)

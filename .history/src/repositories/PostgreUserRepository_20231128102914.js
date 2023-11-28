@@ -94,16 +94,22 @@ class PostgreUserRepository {
     await client.end()
   }
 
-  async isLastAdmin () {
+  async userIsLastAdmin (id) {
     const client = new pg.Client(this.baseURI)
     await client.connect()
 
-    const result = await client.query('SELECT COUNT(users.id) as cnt FROM users INNER JOIN roles ON roles.id = users.role_id WHERE roles.name = $1', [this.ROLE_ADMIN])
-    const res = result.rows[0].cnt
-    await client.end()
+    const userQuery = await client.query('SELECT role_id FROM users WHERE id = $1', [id])
+    if (userQuery.rows.length === 0) {
+      console.log('User does not exist')
+    }
+    if (userQuery.rows[0].role_id !== this.ROLE_ADMIN) {
+      return false
+    }
+    const result = await client.query('SELECT COUNT(role_id) as cnt FROM users WHERE role_id=$1 GROUP BY role_id', [this.ROLE_ADMIN])
+    const res = result.rows[0].cnt <= 0
 
-    console.log('RES' + res <= 1)
-    return res <= 1
+    await client.end()
+    return res
   }
 
   async findByEmail (email) {

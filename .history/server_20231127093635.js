@@ -2,12 +2,14 @@ const makeApp = require('./src/appBuilder')
 const dotenv = require('dotenv')
 const swaggerDocument = require('./docs/swagger')
 const swaggerUi = require('swagger-ui-express')
+const InMemoryUserRepository = require('./src/repositories/InMemoryUserRepository')
 const RabbitMQAdapter = require('./src/adapters/RabbitMQAdapter')
 const PostgreUserRepository = require('./src/repositories/PostgreUserRepository')
 
 dotenv.config()
 
-const app = makeApp(new PostgreUserRepository(process.env.DATABASE_URL, process.env.ROLE_ADMIN))
+//const app = makeApp(new InMemoryUserRepository(), new RabbitMQAdapter(process.env.RABBIT_MQ_URI || 'amqp://localhost:5672'))
+const app = makeApp(new PostgreUserRepository(process.env.DATABASE_URL))
 
 console.log(process.env.DATABASE_URL)
 

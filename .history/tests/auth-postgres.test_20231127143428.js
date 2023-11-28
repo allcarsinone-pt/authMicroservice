@@ -1,29 +1,32 @@
 
 const makeApp = require('../src/appBuilder')
 const User = require('../src/entities/User')
-const PostgreUserRepository = require('../src/repositories/PostgreUserRepository', 1)
-const userRepository = new PostgreUserRepository('', 1)
+const PostgreUserRepository = require('../src/repositories/PostgreUserRepository')
+const userRepository = new PostgreUserRepository('')
 const app = makeApp(userRepository)
 const request = require('supertest')(app)
 const bcrypt = require('bcrypt')
 
-const { GenericContainer, PullPolicy } = require('testcontainers')
+const { GenericContainer, PullPolicy} = require('testcontainers') 
 
-const container = new GenericContainer('postgres', 'latest')
+
+let container = new GenericContainer('postgres', 'latest')
 let startedContainer
 
 jest.setTimeout(999999)
 
 describe('Tests', () => {
   beforeAll(async () => {
-    startedContainer = await container.withEnvironment({ POSTGRES_USER: 'test', POSTGRES_PASSWORD: 'test', POSTGRES_DB: 'test_db' }).withCopyFilesToContainer([{source:'./database/init-database.sql', target:'/docker-entrypoint-initdb.d/init-database.sql'}]).withExposedPorts({host: 5433, container: 5432}).withPullPolicy(PullPolicy.defaultPolicy()).start()
+
+    startedContainer = await container.withEnvironment({POSTGRES_USER: 'test', POSTGRES_PASSWORD: 'test', POSTGRES_DB: 'test_db'}).withCopyFilesToContainer([{source:'./database/init-database.sql', target:'/docker-entrypoint-initdb.d/init-database.sql'}]).withExposedPorts({host: 5433, container: 5432}).withPullPolicy(PullPolicy.defaultPolicy()).start()
     const port = await startedContainer.getMappedPort(5432)
     const host = await startedContainer.getHost()
     const uri = `postgres://test:test@${host}:${port}/test_db`
-
+    
     userRepository.baseURI = uri
 
     console.log('connected to db')
+    
   })
   afterAll(async () => {
     await startedContainer.stop()
@@ -38,7 +41,7 @@ describe('Tests', () => {
       expect(response.body).toHaveProperty('name', requestBody.name)
       expect(response.body).toHaveProperty('email', requestBody.email)
       expect(response.body).toHaveProperty('role', requestBody.role)
-      // expect(response.body).not.toHaveProperty('password')
+      //expect(response.body).not.toHaveProperty('password')
     })
     it('should return 400 if some parameter is missing', async () => {
       const requestBody = { name: 'test', username: 'test_username', password: '12345678', confirmPassword: '12345678', role: 'user' }
@@ -58,6 +61,7 @@ describe('Tests', () => {
       expect(response.status).toBe(400)
       expect(response.body).toHaveProperty('message', 'Passwords don t match')
     })
+  
     it('should return 400 if email is invalid', async () => {
       const requestBody = { email: 'test', name: 'test', username: 'test_username', password: '12345678', confirmPassword: '12345678', role: 'user' }
       const response = await request.post('/users/register').send(requestBody)
@@ -65,7 +69,7 @@ describe('Tests', () => {
       expect(response.body).toHaveProperty('message', 'Invalid email')
     })
   })
-
+  
   describe('POST /users/login', () => {
     beforeEach(async () => {
       await userRepository.wipe()
@@ -101,16 +105,16 @@ describe('Tests', () => {
       expect(response.body).toHaveProperty('error', 'Email or password incorrect')
     })
   })
-
+  
   describe('GET /users/validate', () => {
     let token
     let tokenCopy = ''
-
+    
     beforeAll(async () => {
       const salt = bcrypt.genSaltSync(10)
       const hash = bcrypt.hashSync('12345678', salt)
       await userRepository.create(new User('John Doe', 'test@test.com', hash, 'user'))
-
+    
       token = await request.post('/users/login').send({ email: 'test@test.com', password: '12345678' })
       console.log(token.body)
       token = token.body.token
@@ -120,10 +124,11 @@ describe('Tests', () => {
     beforeEach(async () => {
       token = tokenCopy
     })
-
+  
     afterAll(async () => {
+      
     })
-
+  
     it('should return 200 if user is valid', async () => {
       console.log(token)
       const response = await request.get('/users/validate').set('Authorization', `Bearer ${token}`)
@@ -137,6 +142,9 @@ describe('Tests', () => {
       const response = await request.get('/users/validate')
       expect(response.status).toBe(401)
       expect(response.body).toHaveProperty('error', 'No token provided')
+  
     })
+  
   })
 })
+
