@@ -39,7 +39,7 @@ router.delete('/delete', async (req, res) => {
   controller.execute(req, res)
 })
 
-router.put('/changepwd', async (req, res) => {
+router.changePwd('/changepwd', async (req, res) => {
   const controller = req.app.get('changePwdUserController')
   controller.execute(req, res)
 })

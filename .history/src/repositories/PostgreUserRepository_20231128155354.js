@@ -1,5 +1,7 @@
 const pg = require('pg')
 const User = require('../entities/User')
+const bcrypt = require('bcryptjs')
+
 
 class PostgreUserRepository {
   constructor (baseURI, ROLE_ADMIN) {
@@ -91,7 +93,8 @@ class PostgreUserRepository {
   async changePwd (id, newPassword) {
     const client = new pg.Client(this.baseURI)
     await client.connect()
-    await client.query('UPDATE users SET password=$1 WHERE id = $2', [newPassword, id])
+    const hashedPassword = await bcrypt.hash(newPassword, 10)
+    await client.query('UPDATE users SET password=$1 WHERE id = $2', [hashedPassword, id])
     await client.end()
   }
 

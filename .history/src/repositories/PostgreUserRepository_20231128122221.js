@@ -1,24 +1,23 @@
 const pg = require('pg')
 const User = require('../entities/User')
-
 class PostgreUserRepository {
-  constructor (baseURI, ROLE_ADMIN) {
+  constructor (baseURI,ROLE_ADMIN) {
     this.baseURI = baseURI
     this.ROLE_ADMIN = ROLE_ADMIN
   }
 
   async create (user) {
-    const { username, name, email, password, address, city, postalcode, mobilephone, role } = user
+    const { username, name, email, password, address, city, postalcode, mobilephone } = user
 
     const client = new pg.Client(this.baseURI)
     await client.connect()
 
-    const roleExists = await client.query('SELECT * FROM roles WHERE name = $1', [role])
+    const roleExists = await client.query('SELECT * FROM roles WHERE name = $1', [user.role])
     let roleId
     if (roleExists.rows.length === 0) {
       console.log('role not exists')
-      const roleQuery = await client.query('INSERT INTO roles (name) VALUES ($1) RETURNING *', [role])
-      roleId = roleQuery.rows[0].id
+      const role = await client.query('INSERT INTO roles (name) VALUES ($1) RETURNING *', [user.role])
+      roleId = role.rows[0].id
     } else {
       console.log('role exists')
       roleId = roleExists.rows[0].id
@@ -37,17 +36,17 @@ class PostgreUserRepository {
   }
 
   async edit (user) {
-    const { id, username, name, address, city, postalcode, mobilephone, email, role } = user
+    const { id, username, name, address, city, postalcode, mobilephone, email } = user
 
     const client = new pg.Client(this.baseURI)
     await client.connect()
 
-    const roleExists = await client.query('SELECT * FROM roles WHERE name = $1', [role])
+    const roleExists = await client.query('SELECT * FROM roles WHERE name = $1', [user.role])
     let roleId
     if (roleExists.rows.length === 0) {
       console.log('Role does not exist')
-      const roleQuery = await client.query('INSERT INTO roles (name) VALUES ($1) RETURNING *', [role])
-      roleId = roleQuery.rows[0].id
+      const role = await client.query('INSERT INTO roles (name) VALUES ($1) RETURNING *', [user.role])
+      roleId = role.rows[0].id
     } else {
       console.log('Role exists')
       roleId = roleExists.rows[0].id
@@ -86,13 +85,6 @@ class PostgreUserRepository {
 
     await client.end()
     return { id }
-  }
-
-  async changePwd (id, newPassword) {
-    const client = new pg.Client(this.baseURI)
-    await client.connect()
-    await client.query('UPDATE users SET password=$1 WHERE id = $2', [newPassword, id])
-    await client.end()
   }
 
   async wipe () {

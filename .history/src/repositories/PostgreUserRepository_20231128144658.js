@@ -1,6 +1,8 @@
 const pg = require('pg')
 const User = require('../entities/User')
 
+const bcrypt = require('bcryptjs')
+
 class PostgreUserRepository {
   constructor (baseURI, ROLE_ADMIN) {
     this.baseURI = baseURI
@@ -88,12 +90,29 @@ class PostgreUserRepository {
     return { id }
   }
 
-  async changePwd (id, newPassword) {
-    const client = new pg.Client(this.baseURI)
-    await client.connect()
-    await client.query('UPDATE users SET password=$1 WHERE id = $2', [newPassword, id])
-    await client.end()
-  }
+  async changePwd (UserID, Password, NewPassword) {
+    const {token,oldPassword,newPassword} = user;
+    console.log(token,oldPassword,newPassword);
+    if(!oldPassword || !newPassword){
+        return({status:400, message:'all fields are required'});
+    }
+    if(newPassword.length < 6){
+        return({status:400, message:'password must be at least 6 characters'});
+    }
+    try{
+        const user=jwt.verify(token, JWT_SECRET);
+        const _id=user.id;
+        const hashedPassword = await bcrypt.hash(newPassword, 10);
+        await User.updateOne({ _id }, { password: hashedPassword });
+        return({status:200, message:'password changed'});
+        console.log(v);
+    }catch(err){
+        console.log(err);
+        return({status:400, message:'error changing password'});
+
+    }
+}
+
 
   async wipe () {
     const client = new pg.Client(this.baseURI)

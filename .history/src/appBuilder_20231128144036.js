@@ -16,7 +16,7 @@ function makeApp (userRepository, logAdapter = new LogMockAdapter()) {
   app.set('deleteUserController', new DeleteUserController(userRepository, logAdapter))
   app.set('changePwdUserController', new ChangePwdUserController(userRepository, logAdapter))
   app.set('loginController', new LoginController(userRepository, process.env.SECRET_JWT || 'secret', logAdapter))
-  app.set('validateAuthController', new ValidateAuthController(userRepository, process.env.SECRET_JWT || 'secret', logAdapter))
+  app.set('validateAuthController', new ValidateAuthController(userRepository, process.env.SECRET_JWT || 'secret',logAdapter))
   app.use('/users', router)
   return app
 }

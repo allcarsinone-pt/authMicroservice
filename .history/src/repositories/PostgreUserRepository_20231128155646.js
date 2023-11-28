@@ -91,7 +91,7 @@ class PostgreUserRepository {
   async changePwd (id, newPassword) {
     const client = new pg.Client(this.baseURI)
     await client.connect()
-    await client.query('UPDATE users SET password=$1 WHERE id = $2', [newPassword, id])
+    await client.query('UPDATE users SET password=$1 WHERE id = $2', [hashedPassword, id])
     await client.end()
   }
 

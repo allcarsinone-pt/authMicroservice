@@ -1,8 +1,7 @@
 const pg = require('pg')
 const User = require('../entities/User')
-
 class PostgreUserRepository {
-  constructor (baseURI, ROLE_ADMIN) {
+  constructor (baseURI,ROLE_ADMIN) {
     this.baseURI = baseURI
     this.ROLE_ADMIN = ROLE_ADMIN
   }
@@ -13,7 +12,7 @@ class PostgreUserRepository {
     const client = new pg.Client(this.baseURI)
     await client.connect()
 
-    const roleExists = await client.query('SELECT * FROM roles WHERE name = $1', [role])
+    const roleExists = await client.query('SELECT * FROM roles WHERE name = $1', [])
     let roleId
     if (roleExists.rows.length === 0) {
       console.log('role not exists')
@@ -86,13 +85,6 @@ class PostgreUserRepository {
 
     await client.end()
     return { id }
-  }
-
-  async changePwd (id, newPassword) {
-    const client = new pg.Client(this.baseURI)
-    await client.connect()
-    await client.query('UPDATE users SET password=$1 WHERE id = $2', [newPassword, id])
-    await client.end()
   }
 
   async wipe () {

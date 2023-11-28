@@ -77,8 +77,9 @@ describe('Tests', () => {
     it('should return 200 if user is logged in', async () => {
       const salt = bcrypt.genSaltSync(10)
       const hash = bcrypt.hashSync('12345678', salt)
-      const createBody = { username: 'test_username', email: 'test@test.com', name: 'test', password: hash, confirmPassword: '12345678', role: 'admin' }
-      await userRepository.create(new User(createBody.username, createBody.name, createBody.email, createBody.password, createBody.role))
+      const createBody = { username: 'test_username', email: 'test@test.com', name: 'test', password: hash, confirmPassword: '12345678', role: 'user' }
+      await userRepository.create(new User(createBody.username, createBody.name, createBody.email, createBody.password, createBody.body))
+      
       const requestBody = { email: 'test@test.com', password: '12345678' }
       const response = await request.post('/users/login').send(requestBody)
       expect(response.status).toBe(200)
