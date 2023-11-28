@@ -1,5 +1,7 @@
 const ChangePwdUserUseCase = require('../usecases/ChangePwdUseCase/ChangePwd.usecase')
+const ValidateAuthUseCase = require('../usecases/ValidateAuthUseCase/ValidateAuth.usecase')
 const bcrypt = require('bcrypt') // ? - tem de estar aqui ? TIP: perguntar ao professor de arquitetura
+const jwt = require('jsonwebtoken')
 const LogService = require('./services/LogService')
 
 /**
@@ -8,8 +10,9 @@ const LogService = require('./services/LogService')
  */
 
 class ChangePwdUserController {
-  constructor (userRepository, logService, token) {
+  constructor (userRepository, secret, logService) {
     this.userRepository = userRepository
+    this.secret = secret
     this.logService = logService
   }
 
@@ -21,21 +24,25 @@ class ChangePwdUserController {
    */
 
   async execute (request, response) {
-    const { id, password } = request.body
-    if (!id) {
+    const { token, password } = request.body
+    
+    if (!token || !password) {
       await LogService.execute({ from: 'authService', data: 'Missing fields', date: new Date(), status: 'error' }, this.logService)
       return response.status(400).json({ message: 'Missing fields' })
     }
 
-    //const useRepo = new ValidateAuthUseCase(this.userRepository)
-    //const userLog = await useRepo.execute({ id })
-
-    //if (userLog.error || userLog.id !== id) {
-    //  return response.status(400).json({ message: 'Authentication error' })
-   // }
-
+    const userTok = jwt.verify(token, this.secret)
+    const validateAuthUseCase = new ValidateAuthUseCase(this.userRepository)
+    const result = await validateAuthUseCase.execute(userTok)
+    if (!result.success) {
+      LogService.execute({ from: 'authService', data: result.error.message, date: new Date(), status: 'error' }, this.logService)
+      return res.status(500).json({ error: result.error.message })
+    }
+    
     const useCase = new ChangePwdUserUseCase(this.userRepository)
     const hashedPassword = await bcrypt.hash(password, 10)
+    const { id } = userTok;
+    
     const user = await useCase.execute({ id, hashedPassword })
 
     if (!user.success) {

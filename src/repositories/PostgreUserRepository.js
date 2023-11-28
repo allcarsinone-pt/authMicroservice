@@ -93,6 +93,7 @@ class PostgreUserRepository {
     await client.connect()
     await client.query('UPDATE users SET password=$1 WHERE id = $2', [newPassword, id])
     await client.end()
+    return { id }
   }
 
   async wipe () {
@@ -122,15 +123,7 @@ class PostgreUserRepository {
     if (result.rows.length === 0) {
       return undefined
     }
-    return new User(result.rows[0].username,
-      result.rows[0].name,
-      result.rows[0].address,
-      result.rows[0].city,
-      result.rows[0].postalcode,
-      result.rows[0].mobilephone,
-      result.rows[0].email,
-      result.rows[0].roleId,
-      result.rows[0].id)
+    return new User({...result.rows[0]});
   }
 
   async findById (id) {
@@ -141,15 +134,7 @@ class PostgreUserRepository {
     if (result.rows.length === 0) {
       return undefined
     }
-    return new User(result.rows[0].username,
-      result.rows[0].name,
-      result.rows[0].address,
-      result.rows[0].city,
-      result.rows[0].postalcode,
-      result.rows[0].mobilephone,
-      result.rows[0].email,
-      result.rows[0].roleId,
-      result.rows[0].id)
+    return new User({...result.rows[0]});
   }
 }
 

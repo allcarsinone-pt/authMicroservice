@@ -82,6 +82,20 @@ class User {
     return new User(user)
   }
 
+    /**
+   * @description Change User password
+   * @param {*} id User id
+   * @param {*} hashedPassword Encripted password
+   * @returns a new instance of User
+   */
+    static changePwd (id, hashedPassword) {
+      if (!id || !hashedPassword) {
+        throw new Error('Invalid user')
+      }
+  
+      return new User({id})
+    }
+
   /**
    * @description Edit User making the necessary validations
    * @param {*} name Name of user

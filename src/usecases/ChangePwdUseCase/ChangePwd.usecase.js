@@ -24,8 +24,8 @@ class ChangePwdUserUseCase {
         return Result.failed(new Error('User not found'))
       }
 
-      let user = User.changePwd(changePwdUserDto)
-      user = await this.userRepository.changePwd(user)
+      let user = User.changePwd(changePwdUserDto.id, changePwdUserDto.hashedPassword )
+      user = await this.userRepository.changePwd(changePwdUserDto.id, changePwdUserDto.hashedPassword)
       return Result.success(user)
     })
     return withErrorHandling()
