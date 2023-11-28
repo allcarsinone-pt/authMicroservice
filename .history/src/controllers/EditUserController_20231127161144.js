@@ -21,7 +21,7 @@ class EditUserController {
    */
   
   async execute (request, response) {
-    const { id, username, name, address, city, postalcode, mobilephone, email, role } = request.body
+    let { id, username, name, address, city, postalcode, mobilephone, email, role } = request.body
     if (!id || !email || !username || !name || !role) {
       await LogService.execute({ from: 'authService', data: 'Missing fields', date: new Date(), status: 'error' }, this.logService)
       return response.status(400).json({ message: 'Missing fields' })
@@ -29,7 +29,7 @@ class EditUserController {
 
     const usecase = new EditUserUseCase(this.userRepository)
     const user = await usecase.execute({
-      id, username, name, address, city, postalcode, mobilephone, email, role
+        id, username, name, address, city, postalcode, mobilephone, email, role
     })
 
     if (!user.success) {

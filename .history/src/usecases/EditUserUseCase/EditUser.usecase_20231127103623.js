@@ -1,4 +1,5 @@
 const User = require('../../entities/User')
+const crypto = require('crypto') // This is a nodejs module, you can use uuid or other lib
 const { Result, handleError } = require('../../util/Result')
 
 class EditUserUseCase {

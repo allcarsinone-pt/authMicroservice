@@ -3,7 +3,7 @@ const router = require('express').Router()
 /**
  * @openapi
  * /users/register:
- *
+ *   
  *   post:
  *     tags:
  *       - Auth
@@ -22,7 +22,7 @@ const router = require('express').Router()
  *           application/json:
  *             schema:
  *               $ref: '#/definitions/RegisterUserResponseBody'
- *
+ *           
  */
 router.post('/register', async (req, res) => {
   const controller = req.app.get('registerUserController')
@@ -103,3 +103,7 @@ router.get('/validate', async (req, res) => {
  *         example: 'admin'
  */
 module.exports = router
+
+
+
+
