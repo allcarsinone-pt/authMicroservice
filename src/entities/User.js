@@ -17,10 +17,11 @@ class User {
     this.postalcode = user.postalcode
     this.mobilephone = user.mobilephone
     this.role = user.role
+    this.role_id = user.role_id
   }
 
   toJson () {
-    return { id: this.id, username: this.username, name: this.name, email: this.email, password: this.password, address: this.address, city: this.city, postalcode: this.postalcode, mobilephone: this.mobilephone, role: this.role }
+    return { id: this.id, username: this.username, name: this.name, email: this.email, address: this.address, city: this.city, postalcode: this.postalcode, mobilephone: this.mobilephone, role_id: this.role_id }
   }
 
   /**
@@ -35,7 +36,7 @@ class User {
     if (!user) {
       throw new Error('Invalid user')
     }
-    const { username, name, email, role } = user
+    const { username, name, email, password, address, city, postalcode, mobilephone, role_id } = user
 
     if (name.length === 0) {
       throw new Error('Name is required')
@@ -46,7 +47,7 @@ class User {
     if (username.length < 6) {
       throw new Error('Username is required')
     }
-    if (role.length === 0) {
+    if (!role_id) {
       throw new Error('Role is required')
     }
 
@@ -64,7 +65,7 @@ class User {
     if (!user) {
       throw new Error('Invalid user')
     }
-    const { username, name, email, role } = user
+    const { username, name, email, password, address, city, postalcode, mobilephone, role } = user
 
     if (name.length === 0) {
       throw new Error('Name is required')

@@ -24,9 +24,9 @@ class RecoverPwdUserController {
      */
 
   async execute (req, res) {
-    const { token, password } = req.body
+    const { token, password, confirmPassword } = req.body
 
-    if (!token || !password) {
+    if (!token || !password || !confirmPassword) {
       await LogService.execute({ from: 'authService', data: 'Missing fields', date: new Date(), status: 'error' }, this.logService)
       return res.status(400).json({ message: 'Missing fields' })
     }
@@ -40,6 +40,12 @@ class RecoverPwdUserController {
     }
 
     const useCase = new RecoverPwdUserUseCase(this.userRepository)
+    
+    if(password !== confirmPassword) {
+      await LogService.execute({ from: 'authService', data: 'Passwords do not match', date: new Date(), status: 'error' }, this.logService)
+      return res.status(400).json({ message: 'Passwords do not match' })
+    }
+    
     const hashedPassword = await bcrypt.hash(password, 10)
     const { email } = userTok
 

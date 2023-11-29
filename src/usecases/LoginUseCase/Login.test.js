@@ -8,7 +8,7 @@ describe('LoginUseCase', () => {
   beforeEach(async () => {
     userRepository = new InMemoryUserRepository()
     sut = new LoginUseCase(userRepository)
-    await userRepository.create(new User('John Doe', 'test@test.com', '12345678', 'user-id'))
+    userRepository.create(new User({name: 'John Doe', username: 'johndoe', email: 'test@test.com', password: '12345678', role: 'user'}))
   })
   it('should login a user', async () => {
     const result = await sut.execute({
@@ -18,6 +18,7 @@ describe('LoginUseCase', () => {
     expect(result.success).toBe(true)
     expect(result.data).toHaveProperty('id')
     expect(result.data).toHaveProperty('name', 'John Doe')
+    expect(result.data).toHaveProperty('username', 'johndoe')
     expect(result.data).toHaveProperty('email', 'test@test.com')
     expect(result.data).not.toHaveProperty('password')
   })
