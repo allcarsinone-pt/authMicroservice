@@ -1,4 +1,4 @@
-const ChangePwdUserUseCase = require('../usecases/ChangePwdUseCase/ChangePwd.usecase')
+const RecoverPwdUserUseCase = require('../usecases/RecoverPwdUseCase/RecoverPwd.usecase')
 const ValidateAuthUseCase = require('../usecases/ValidateAuthUseCase/ValidateAuth.usecase')
 const bcrypt = require('bcrypt') // ? - tem de estar aqui ? TIP: perguntar ao professor de arquitetura
 const jwt = require('jsonwebtoken')
@@ -9,7 +9,7 @@ const LogService = require('./services/LogService')
  * @description Controller to changePwd an user
  */
 
-class ChangePwdUserController {
+class RecoverPwdUserController {
   constructor (userRepository, secret, logService) {
     this.userRepository = userRepository
     this.secret = secret
@@ -17,11 +17,11 @@ class ChangePwdUserController {
   }
 
   /**
-   * @description Method to execute http request to changePwd an user
-   * @param {*} request request object from express
-   * @param {*} response response object from express
-   * @returns response object from express
-   */
+     * @description Method to execute http request to changePwd an user
+     * @param {*} request request object from express
+     * @param {*} response response object from express
+     * @returns response object from express
+     */
 
   async execute (req, res) {
     const { token, password } = req.body
@@ -39,11 +39,11 @@ class ChangePwdUserController {
       return res.status(500).json({ error: result.error.message })
     }
 
-    const useCase = new ChangePwdUserUseCase(this.userRepository)
+    const useCase = new RecoverPwdUserUseCase(this.userRepository)
     const hashedPassword = await bcrypt.hash(password, 10)
-    const { id } = userTok
+    const { email } = userTok
 
-    const user = await useCase.execute({ id, hashedPassword })
+    const user = await useCase.execute({ email, hashedPassword })
 
     if (!user.success) {
       await LogService.execute({ from: 'authService', data: `${user.error.message}`, date: new Date(), status: 'error' }, this.logService)
@@ -53,9 +53,9 @@ class ChangePwdUserController {
         return res.status(500).json({ message: 'Internal server error' })
       }
     }
-    await LogService.execute({ from: 'authService', data: `${user.data.id} password changed`, date: new Date(), status: 'info' }, this.logService)
+    await LogService.execute({ from: 'authService', data: `${user.data.id} password recovered`, date: new Date(), status: 'info' }, this.logService)
     return res.status(201).json(user.data)
   }
 }
 
-module.exports = ChangePwdUserController
+module.exports = RecoverPwdUserController

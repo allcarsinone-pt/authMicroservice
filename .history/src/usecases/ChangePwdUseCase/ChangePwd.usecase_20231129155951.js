@@ -1,3 +1,4 @@
+const User = require('../../entities/User')
 const { Result, handleError } = require('../../util/Result')
 
 class ChangePwdUserUseCase {
@@ -18,7 +19,7 @@ class ChangePwdUserUseCase {
      * function handleError is a util function to handle errors from async functions
      */
     const withErrorHandling = handleError(async () => {
-      const userFound = await this.userRepository.findById(changePwdUserDto.id)
+    const userFound = await this.userRepository.findById(changePwdUserDto.id)
       if (!userFound) {
         return Result.failed(new Error('User not found'))
       }
