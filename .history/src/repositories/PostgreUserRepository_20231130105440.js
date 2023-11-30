@@ -75,11 +75,11 @@ class PostgreUserRepository {
     await client.end()
   }
 
-  async isLastAdmin (roleAdmin) {
+  async isLastAdmin () {
     const client = new pg.Client(this.baseURI)
     await client.connect()
 
-    const result = await client.query('SELECT COUNT(users.id) as cnt FROM users INNER JOIN roles ON roles.id = users.role_id WHERE roles.name = $1', [roleAdmin])
+    const result = await client.query('SELECT COUNT(users.id) as cnt FROM users INNER JOIN roles ON roles.id = users.role_id WHERE roles.name = $1', [this.ROLE_ADMIN])
     const res = result.rows[0].cnt
     await client.end()
 

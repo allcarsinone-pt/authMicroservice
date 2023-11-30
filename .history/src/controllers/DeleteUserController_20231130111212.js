@@ -38,23 +38,19 @@ class DeleteUserController {
         LogService.execute({ from: 'authDeleteService', data: resultAUth.error.message, date: new Date(), status: 'error' }, this.logService)
         return resultAUth.status(500).json({ error: resultAUth.error.message })
       }
+      console.log(resultAUth.data.role_id)
+      let isAdmin = (resultAUth.data.role_id === parseInt(this.roleAdmin))
 
-      const isAdmin = (resultAUth.data.role_id === parseInt(this.roleAdmin))
+
+
       const { id } = request.body
-
-      // If is not admin only can remove him self
-      if (!isAdmin && resultAUth.data.id !== id) {
-        await LogService.execute({ from: 'authDeleteService', data: 'Unauthorized delete', date: new Date(), status: 'error' }, this.logService)
-        return response.status(400).json({ message: 'Unauthorized delete' })
-      }
-
       if (!id) {
         await LogService.execute({ from: 'authDeleteService', data: 'Missing fields', date: new Date(), status: 'error' }, this.logService)
         return response.status(400).json({ message: 'Missing fields' })
       }
 
-      const useCase = new DeleteUserUseCase(this.userRepository)
-      const user = await useCase.execute({ id })
+      const usecase = new DeleteUserUseCase(this.userRepository)
+      const user = await usecase.execute({ id })
 
       if (!user.success) {
         await LogService.execute({ from: 'authDeleteService', data: `${user.error.message}`, date: new Date(), status: 'error' }, this.logService)

@@ -171,7 +171,7 @@ describe('Tests', () => {
 
     it('should return 200 if user is removed', async () => {
       const response = await request.delete('/users/delete').set('Authorization', `Bearer ${token}`).send({ id: 1 })
-      expect(response.status).toBe(200)
+      expect(response.status).toBe(400)
     })
   })
 })

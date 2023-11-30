@@ -118,7 +118,9 @@ describe('Tests', () => {
       await userRepository.create(new User(user))
 
       token = await request.post('/users/login').send({ email: 'test1@test.com', password: '12345678' })
+      console.log(token.body)
       token = token.body.token
+      console.log(token)
       tokenCopy = token
     })
     beforeEach(async () => {
@@ -150,12 +152,13 @@ describe('Tests', () => {
     beforeAll(async () => {
       const salt = bcrypt.genSaltSync(10)
       const hash = bcrypt.hashSync('12345678', salt)
-      const user = { email: 'test2@test.com', name: 'John Doe', username: 'test_username2', password: hash, role_id: 2, id: 1 }
+      const user = { email: 'test1@test.com', name: 'John Doe', username: 'test_username', password: hash, role_id: 2 }
       await userRepository.create(new User(user))
-      token = await request.post('/users/login').send({ email: 'test2@test.com', password: '12345678' })
+      token = await request.post('/users/login').send({ email: 'test1@test.com', password: '12345678' })
+      console.log(token.body)
       token = token.body.token
-      tokenCopy = token
       console.log(token)
+      tokenCopy = token
     })
     beforeEach(async () => {
       token = tokenCopy
@@ -164,14 +167,22 @@ describe('Tests', () => {
     afterAll(async () => {
     })
 
-    it('should return 400 if another user is removed', async () => {
-      const response = await request.delete('/users/delete').set('Authorization', `Bearer ${token}`).send({ id: 2 })
-      expect(response.status).toBe(400)
-    })
-
-    it('should return 200 if user is removed', async () => {
-      const response = await request.delete('/users/delete').set('Authorization', `Bearer ${token}`).send({ id: 1 })
+    it('should return 200 if user is valid', async () => {
+      const response = await request.get('/users/validate').set('Authorization', `Bearer ${token}`)
       expect(response.status).toBe(200)
+      expect(response.body).toHaveProperty('name', 'John Doe')
+      expect(response.body).toHaveProperty('email', 'test1@test.com')
+      expect(response.body).toHaveProperty('role_id', 2)
+      expect(response.body).not.toHaveProperty('password')
+    })
+    it('should return 401 if no token is provided', async () => {
+      const response = await request.get('/users/validate')
+      expect(response.status).toBe(401)
+      expect(response.body).toHaveProperty('error', 'No token provided')
+    })
+    it('should return 400 if another user is removed', async () => {
+      const response = await request.get('/users/delete').set('Authorization', `Bearer ${token}`)
+      expect(response.status).toBe(400)
     })
   })
 })

@@ -21,7 +21,7 @@ class LoginController {
       return res.status(500).json({ error: result.error.message })
     }
     const token = jwt.sign(result.data, this.secret, { expiresIn: '2h' })
-    await LogService.execute({ from: 'authService', data: `${result.data.id}-${result.data.role_id} logs in`, date: new Date(), status: 'info' }, this.logService)
+    await LogService.execute({from: 'authService', data: `${result.data.id}-${result.data.role_id} logs in`, date: new Date(), status: 'info'}, this.logService)
     return res.status(200).json({ token })
   }
 }

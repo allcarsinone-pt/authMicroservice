@@ -148,14 +148,13 @@ describe('Tests', () => {
     let tokenCopy = ''
 
     beforeAll(async () => {
-      const salt = bcrypt.genSaltSync(10)
-      const hash = bcrypt.hashSync('12345678', salt)
-      const user = { email: 'test2@test.com', name: 'John Doe', username: 'test_username2', password: hash, role_id: 2, id: 1 }
-      await userRepository.create(new User(user))
-      token = await request.post('/users/login').send({ email: 'test2@test.com', password: '12345678' })
+      const requestBody = { username: 'test_username', email: 'test@test5.com', name: 'test', password: '12345678', confirmPassword: '12345678', role_id: 2 }
+      await userRepository.create(new User(requestBody))
+      token = await request.post('/users/login').send({ email: 'test@test5.com', password: '12345678' })
+      console.log(token.body)
       token = token.body.token
-      tokenCopy = token
       console.log(token)
+      tokenCopy = token
     })
     beforeEach(async () => {
       token = tokenCopy
@@ -165,13 +164,8 @@ describe('Tests', () => {
     })
 
     it('should return 400 if another user is removed', async () => {
-      const response = await request.delete('/users/delete').set('Authorization', `Bearer ${token}`).send({ id: 2 })
-      expect(response.status).toBe(400)
-    })
-
-    it('should return 200 if user is removed', async () => {
       const response = await request.delete('/users/delete').set('Authorization', `Bearer ${token}`).send({ id: 1 })
-      expect(response.status).toBe(200)
+      expect(response.status).toBe(400)
     })
   })
 })

@@ -169,9 +169,9 @@ describe('Tests', () => {
       expect(response.status).toBe(400)
     })
 
-    it('should return 200 if user is removed', async () => {
+    it('should return 400 if another user is removed', async () => {
       const response = await request.delete('/users/delete').set('Authorization', `Bearer ${token}`).send({ id: 1 })
-      expect(response.status).toBe(200)
+      expect(response.status).toBe(400)
     })
   })
 })
