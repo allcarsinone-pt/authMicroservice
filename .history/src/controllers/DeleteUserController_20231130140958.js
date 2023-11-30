@@ -42,20 +42,15 @@ class DeleteUserController {
       const isAdmin = (resultAUth.data.role_id === parseInt(this.roleAdmin))
       const { id } = request.body
 
+      // If is not admin only can remove him self
+      if (!isAdmin && resultAUth.data.id !== id) {
+        await LogService.execute({ from: 'authDeleteService', data: 'Unauthorized delete', date: new Date(), status: 'error' }, this.logService)
+        return response.status(400).json({ message: 'Unauthorized delete' })
+      }
+
       if (!id) {
         await LogService.execute({ from: 'authDeleteService', data: 'Missing fields', date: new Date(), status: 'error' }, this.logService)
         return response.status(400).json({ message: 'Missing fields' })
-      }
-
-      // Prevent delete last admin
-      if (isAdmin) {
-        const userIsLastAdmin = await this.userRepository.isLastAdmin(this.roleAdmin)
-        if (userIsLastAdmin) {
-          return response.status(400).json({ message: 'Last admin cannot be removed' })
-        }
-      } else if (resultAUth.data.id !== id) { // If is not admin only can remove him self
-        await LogService.execute({ from: 'authDeleteService', data: 'Unauthorized delete', date: new Date(), status: 'error' }, this.logService)
-        return response.status(400).json({ message: 'Unauthorized delete' })
       }
 
       const useCase = new DeleteUserUseCase(this.userRepository)

@@ -9,10 +9,6 @@
     <h1>Register User</h1>
     <form method="POST" id='regform'>
       <div class="form-group">
-        <label for="name">Name</label>
-        <input type="text" class="form-control" id="name" name="name" placeholder="Enter Name">
-        </div>
-      <div class="form-group">
         <label for="username">Username</label>
         <input type="text" class="form-control" id="username" name="username" placeholder="Enter username">
       </div>
@@ -21,12 +17,8 @@
         <input type="email" class="form-control" id="email" name="email" placeholder="Enter email">
       </div>
       <div class="form-group">
-        <label for="password">Password</label>
-        <input type="password" class="form-control" id="password" name="password" placeholder="Enter password">
-      </div>
-      <div class="form-group">
-        <label for="confirmPassword">Confirm password</label>
-        <input type="password" class="form-control" id="confirmPassword" name="confirmPassword" placeholder="Confirm password">
+        <label for="firstname"> Name</label>
+        <input type="text" class="form-control" id="firstname" name="firstname" placeholder="Enter First name">
       </div>
 <!--
       <div class="form-group">
@@ -70,19 +62,17 @@
         form.addEventListener('submit', async (event) => {
             event.preventDefault();
             const username  = document.getElementById('username').value;
-            const password  = document.getElementById('password').value;
-            const confirmPassword = document.getElementById('confirmPassword').value;
             const email     = document.getElementById('email').value;
-            const name      = document.getElementById('name').value;
+            const name      = document.getElementById('firstname').value;
             const role_id    = document.getElementById('roleId').value;
 
             //nativo do browser
-            const response = await fetch('/users/register', {
+            const response = await fetch('/users/edit', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({ username, name, password, confirmPassword, email, role_id })
+                body: JSON.stringify({ username, name, email, role_id })
             });
             const data = await response.json();
             console.log(data);
