@@ -21,15 +21,15 @@ class EditUserController {
    */
 
   async execute (request, response) {
-    const { id, username, name, address, city, postal, mobile, email, role } = request.body
-    if (!id || !email || !username || !name || !role) {
+    const { id, username, name, address, city, postalcode, mobilephone, email, roleId } = request.body
+    if (!id || !email || !username || !name || !roleId) {
       await LogService.execute({ from: 'authService', data: 'Missing fields', date: new Date(), status: 'error' }, this.logService)
       return response.status(400).json({ message: 'Missing fields' })
     }
 
     const usecase = new EditUserUseCase(this.userRepository)
     const user = await usecase.execute({
-      id, username, name, address, city, postal, mobile, email, role
+      id, username, name, address, city, postalcode, mobilephone, email, roleId
     })
 
     if (!user.success) {
@@ -40,7 +40,7 @@ class EditUserController {
         return response.status(500).json({ message: 'Internal server error' })
       }
     }
-    await LogService.execute({ from: 'authService', data: `${user.data.id}-${user.data.role} edited`, date: new Date(), status: 'info' }, this.logService)
+    await LogService.execute({ from: 'authService', data: `${user.data.id}-${user.data.roleId} edited`, date: new Date(), status: 'info' }, this.logService)
     return response.status(201).json(user.data)
   }
 }

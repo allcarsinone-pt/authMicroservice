@@ -7,21 +7,21 @@ class PostgreUserRepository {
   }
 
   async create (user) {
-    const { username, name, email, password, address, city, postal, mobile, role } = user
+    const { username, name, email, password, address, city, postalCode, mobilePhone, roleId } = user
     const client = new pg.Client(this.baseURI)
     await client.connect()
 
     const query = 'INSERT INTO users ( username, name, password, address, city, postalcode, ' +
     'mobilephone, email, role_id) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING *'
 
-    const values = [username, name, password, address, city, postal, mobile, email, role]
+    const values = [username, name, password, address, city, postalCode, mobilePhone, email, roleId]
     const result = await client.query(query, values)
     await client.end()
     return new User({ ...result.rows[0] })
   }
 
   async edit (user) {
-    const { id, username, name, email, address, city, postal, mobile, role } = user
+    const { id, username, name, address, city, postalCode, mobilePhone, email, roleId } = user
     const client = new pg.Client(this.baseURI)
     await client.connect()
 
@@ -36,7 +36,7 @@ class PostgreUserRepository {
     'WHERE id = $9 ' +
     'RETURNING *'
 
-    const values = [username, name, address, city, postal, mobile, email, role, id]
+    const values = [username, name, address, city, postalCode, mobilePhone, email, roleId, id]
     const result = await client.query(query, values)
     await client.end()
     return new User({ ...result.rows[0] })
@@ -81,11 +81,11 @@ class PostgreUserRepository {
     return res <= 1
   }
 
-  async roleExists (role) {
+  async roleExists (roleId) {
     const client = new pg.Client(this.baseURI)
-    console.log('ROLE', role)
+    console.log('ROLE', roleId)
     await client.connect()
-    const result = await client.query('SELECT * FROM roles WHERE id = $1', [role])
+    const result = await client.query('SELECT * FROM roles WHERE id = $1', [roleId])
     await client.end()
     return result.rows.length > 0
   }

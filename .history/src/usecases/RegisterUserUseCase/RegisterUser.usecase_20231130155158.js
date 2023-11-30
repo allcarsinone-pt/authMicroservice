@@ -23,7 +23,7 @@ class RegisterUserUseCase {
       if (userAlreadyExists) {
         return Result.failed(new Error('Email already used'))
       }
-      const roleExists = await this.userRepository.roleExists(registerUserDto.role)
+      const roleExists = await this.userRepository.roleExists(registerUserDto.roleId)
       if (!roleExists) {
         return Result.failed(new Error('Role not found'))
       }

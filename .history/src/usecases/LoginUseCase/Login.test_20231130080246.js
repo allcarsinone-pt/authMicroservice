@@ -8,7 +8,7 @@ describe('LoginUseCase', () => {
   beforeEach(async () => {
     userRepository = new InMemoryUserRepository()
     sut = new LoginUseCase(userRepository)
-    userRepository.create(new User({ name: 'John Doe', username: 'johndoe', email: 'test@test.com', password: '12345678', role: 1 }))
+    userRepository.create(new User({name: 'John Doe', username: 'johndoe', email: 'test@test.com', password: '12345678', role: 'user'}))
   })
   it('should login a user', async () => {
     const result = await sut.execute({

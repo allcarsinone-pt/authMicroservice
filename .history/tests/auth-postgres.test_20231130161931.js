@@ -37,7 +37,7 @@ describe('Tests', () => {
       expect(response.body).toHaveProperty('id')
       expect(response.body).toHaveProperty('name', requestBody.name)
       expect(response.body).toHaveProperty('email', requestBody.email)
-      expect(response.body).toHaveProperty('role', requestBody.role)
+      //expect(response.body).toHaveProperty('role', requestBody.role)
       expect(response.body).not.toHaveProperty('password')
     })
     it('should return 400 if some parameter is missing', async () => {

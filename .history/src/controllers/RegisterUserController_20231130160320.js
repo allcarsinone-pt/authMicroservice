@@ -22,7 +22,7 @@ class RegisterUserController {
    */
 
   async execute (request, response) {
-    let { username, name, email, password, confirmPassword, address, city, postal, mobile, role } = request.body
+    let { username, name, email, password, confirmPassword, address, city, postalCode, mobilePhone, role } = request.body
     if (!email || !username || !name || !password || !confirmPassword || !role) {
       await LogService.execute({ from: 'authService', data: 'Missing fields', date: new Date(), status: 'error' }, this.logService)
       return response.status(400).json({ message: 'Missing fields' })
@@ -39,7 +39,7 @@ class RegisterUserController {
     const salt = bcrypt.genSaltSync(10)
     password = bcrypt.hashSync(password, salt)
     const usecase = new RegisterUserUseCase(this.userRepository)
-    const user = await usecase.execute({ username, name, email, password, address, city, postal, mobile, role })
+    const user = await usecase.execute({ username, name, email, password, address, city, postalCode, mobilePhone, role })
 
     if (!user.success) {
       await LogService.execute({ from: 'authService', data: `${user.error.message}`, date: new Date(), status: 'error' }, this.logService)

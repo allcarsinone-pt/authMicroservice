@@ -14,23 +14,13 @@ class User {
     this.password = user.password
     this.address = user.address
     this.city = user.city
-    this.postal = user.postal
-    this.mobile = user.mobile
-    this.role = user.role
+    this.postalCode = user.postalcode
+    this.mobilePhone = user.mobilephone
+    this.roleId = user.role_id
   }
 
   toJson () {
-    return {
-      id: this.id,
-      username: this.username,
-      name: this.name,
-      email: this.email,
-      address: this.address,
-      city: this.city,
-      postal: this.postal,
-      mobile: this.mobile,
-      role: this.role
-    }
+    return { id: this.id, username: this.username, name: this.name, email: this.email, address: this.address, city: this.city, postalCode: this.postalCode, mobilePhone: this.mobilePhone, roleId: this.roleId }
   }
 
   /**
@@ -45,7 +35,7 @@ class User {
     if (!user) {
       throw new Error('Invalid user')
     }
-    const { username, name, email, password, address, city, postal, mobile, role } = user
+    const { username, name, email, password, address, city, postalCode, mobilePhone, roleId } = user
 
     if (name.length === 0) {
       throw new Error('Name is required')
@@ -56,7 +46,7 @@ class User {
     if (username.length < 6) {
       throw new Error('Username is required')
     }
-    if (!role) {
+    if (!roleId) {
       throw new Error('Role is required')
     }
 
@@ -74,7 +64,7 @@ class User {
     if (!user) {
       throw new Error('Invalid user')
     }
-    const { username, name, email, password, address, city, postal, mobile, role } = user
+    const { username, name, email, password, address, city, postalCode, mobilePhone, roleId } = user
 
     if (name.length === 0) {
       throw new Error('Name is required')
@@ -85,7 +75,7 @@ class User {
     if (username.length < 6) {
       throw new Error('Username is required and must contain at least 6 characters')
     }
-    if (role.length === 0) {
+    if (roleId.length === 0) {
       throw new Error('Role is required')
     }
 

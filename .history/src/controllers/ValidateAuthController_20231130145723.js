@@ -32,7 +32,7 @@ class ValidateAuthController {
         LogService.execute({ from: 'authService', data: result.error.message, date: new Date(), status: 'error' }, this.logService)
         return res.status(500).json({ error: result.error.message })
       }
-      LogService.execute({ from: 'authService', data: `${result.data.id}-${result.data.role} validated`, date: new Date(), status: 'info' }, this.logService)
+      LogService.execute({ from: 'authService', data: `${result.data.id}-${result.data.roleId} validated`, date: new Date(), status: 'info' }, this.logService)
       return res.status(200).json(result.data)
     } catch (error) {
       await LogService.execute({ from: 'authService', data: error.message, date: new Date(), status: 'error' }, this.logService)

@@ -64,7 +64,7 @@
             const username  = document.getElementById('username').value;
             const email     = document.getElementById('email').value;
             const name      = document.getElementById('name').value;
-            const role    = document.getElementById('roleId').value;
+            const roleId    = document.getElementById('roleId').value;
 
             //nativo do browser
             const response = await fetch('/users/edit', {
@@ -72,7 +72,7 @@
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({ username, name, email, role })
+                body: JSON.stringify({ username, name, email, roleId })
             });
             const data = await response.json();
             console.log(data);

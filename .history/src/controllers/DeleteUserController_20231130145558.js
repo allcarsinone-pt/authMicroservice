@@ -39,7 +39,7 @@ class DeleteUserController {
         return response.status(500).json({ error: resultAUth.error.message })
       }
 
-      const isAdmin = (resultAUth.data.role === parseInt(this.roleAdmin))
+      const isAdmin = (resultAUth.data.roleId === parseInt(this.roleAdmin))
       const { id } = request.body
 
       if (!id) {
