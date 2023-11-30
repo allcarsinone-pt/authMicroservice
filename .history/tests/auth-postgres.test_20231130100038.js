@@ -87,17 +87,17 @@ describe('Tests', () => {
     it('should return 400 if email is wrong', async () => {
       const salt = bcrypt.genSaltSync(10)
       const hash = bcrypt.hashSync('12345678', salt)
-      const user = { email: 'test@test.com', name: 'John Doe', username: 'test_username', password: hash, role_id: '1' }
+      const user = { email: 'test1@test.com', name: 'John Doe', username: 'test_username', password: hash, role_id: '1' }
       await userRepository.create(new User(user))
-      const requestBody = { email: 'test_WRONG@test.com', password: '12345678' }
+      const requestBody = { email: 'test@test.com', password: '12345678' }
       const response = await request.post('/users/login').send(requestBody)
       expect(response.status).toBe(400)
       expect(response.body).toHaveProperty('error', 'Email or password incorrect')
     })
     it('should return 400 if password is wrong', async () => {
       const salt = bcrypt.genSaltSync(10)
-      const hash = bcrypt.hashSync('9999_WRONG', salt)
-      const user = { email: 'test@test.com', name: 'John Doe', username: 'test_username', password: hash, role_id: '1' }
+      const hash = bcrypt.hashSync('9999', salt)
+      const user = { email: 'test1@test.com', name: 'John Doe', username: 'test_username', password: hash, role_id: '1' }
       await userRepository.create(new User(user))
       const requestBody = { email: 'test@test.com', password: '12345678' }
       const response = await request.post('/users/login').send(requestBody)
@@ -114,28 +114,32 @@ describe('Tests', () => {
       const salt = bcrypt.genSaltSync(10)
       const hash = bcrypt.hashSync('12345678', salt)
 
-      const user = { email: 'test1@test.com', name: 'John Doe', username: 'test_username', password: hash, role_id: 2 }
+      const user = { email: 'test1@test.com', name: 'John Doe', username: 'test_username', password: hash, role_id: '2' }
       await userRepository.create(new User(user))
 
-      token = await request.post('/users/login').send({ email: 'test1@test.com', password: '12345678' })
+      token = await request.post('/users/login').send({ email: 'test@test.com', password: '12345678' })
       console.log(token.body)
       token = token.body.token
       console.log(token)
       tokenCopy = token
+
+      console.log('TTTTTTOOOOOOOOOKKKKKEEEEEEEEENNNNNNNNNN ' + token)
     })
     beforeEach(async () => {
       token = tokenCopy
     })
 
     afterAll(async () => {
+      token = tokenCopy
     })
 
     it('should return 200 if user is valid', async () => {
-      const response = await request.get('/users/validate').set('Authorization', `Bearer ${token}`)
+      
+      const response = await request.get('/users/validate').set('Authorization', 'Bearer ' + token)
       expect(response.status).toBe(200)
       expect(response.body).toHaveProperty('name', 'John Doe')
-      expect(response.body).toHaveProperty('email', 'test1@test.com')
-      expect(response.body).toHaveProperty('role_id', 2)
+      expect(response.body).toHaveProperty('email', 'test@test.com')
+      expect(response.body).toHaveProperty('role_id', '2')
       expect(response.body).not.toHaveProperty('password')
     })
     it('should return 401 if no token is provided', async () => {

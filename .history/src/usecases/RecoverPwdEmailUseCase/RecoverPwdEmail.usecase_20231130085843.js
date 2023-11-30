@@ -26,3 +26,4 @@ class ChangePwdEmailUseCase {
 }
 
 module.exports = ChangePwdEmailUseCase
+

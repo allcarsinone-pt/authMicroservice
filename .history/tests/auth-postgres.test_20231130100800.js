@@ -96,7 +96,7 @@ describe('Tests', () => {
     })
     it('should return 400 if password is wrong', async () => {
       const salt = bcrypt.genSaltSync(10)
-      const hash = bcrypt.hashSync('9999_WRONG', salt)
+      const hash = bcrypt.hashSync('9999', salt)
       const user = { email: 'test@test.com', name: 'John Doe', username: 'test_username', password: hash, role_id: '1' }
       await userRepository.create(new User(user))
       const requestBody = { email: 'test@test.com', password: '12345678' }

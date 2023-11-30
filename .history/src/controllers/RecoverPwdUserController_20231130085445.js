@@ -32,7 +32,7 @@ class RecoverPwdUserController {
     }
 
     const userTok = jwt.verify(token, this.secret)
-    const validateAuthEmailUseCase = new ValidateAuthUseCase(this.userRepository)
+    const validateAuthUseCase = new ValidateAuthUseCase(this.userRepository)
     const result = await validateAuthEmailUseCase.execute(userTok)
     if (!result.success) {
       LogService.execute({ from: 'authService', data: result.error.message, date: new Date(), status: 'error' }, this.logService)

@@ -1,5 +1,5 @@
 const RegisterUserUseCase = require('./RegisterUser.usecase')
-const InMemoryUserRepository = require('../../repositories/InMemoryUserRepository')
+const InMemoryUserRepository = require('../../repositories/PostgreUserRepository')
 const User = require('../../entities/User')
 
 const makeSut = () => {

@@ -1,5 +1,5 @@
 const RecoverPwdUserUseCase = require('../usecases/RecoverPwdUseCase/RecoverPwd.usecase')
-const ValidateAuthUseCase = require('../usecases/ValidateAuthEmailUseCase/ValidateAuthEmail.usecase')
+const ValidateAuthEmailUseCase = require('../usecases/ValidateAuthEmailUseCase/ValidateAuthEmail.usecase')
 const bcrypt = require('bcrypt') // ? - tem de estar aqui ? TIP: perguntar ao professor de arquitetura
 const jwt = require('jsonwebtoken')
 const LogService = require('./services/LogService')
@@ -32,8 +32,8 @@ class RecoverPwdUserController {
     }
 
     const userTok = jwt.verify(token, this.secret)
-    const validateAuthEmailUseCase = new ValidateAuthUseCase(this.userRepository)
-    const result = await validateAuthEmailUseCase.execute(userTok)
+    const validateAuthUseCase = new ValidateAuthEmailUseCase(this.userRepository)
+    const result = await validateAuthUseCase.execute(userTok)
     if (!result.success) {
       LogService.execute({ from: 'authService', data: result.error.message, date: new Date(), status: 'error' }, this.logService)
       return res.status(500).json({ error: result.error.message })
