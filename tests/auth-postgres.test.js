@@ -178,8 +178,6 @@ describe('Tests', () => {
     })
 
     it('should return 200 if user is removed', async () => {
-      console.log('IDS ----------------------------------------------------------------------')
-      console.log(teste.id + ' - ' + teste2.id + ' - ' + teste3.id)
       const response = await request.delete('/users/delete').set('Authorization', `Bearer ${token}`).send({ id: teste.id })
       expect(response.status).toBe(200)
     })
