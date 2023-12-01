@@ -27,6 +27,7 @@ class RegisterUserController {
       await LogService.execute({ from: 'authService', data: 'Missing fields', date: new Date(), status: 'error' }, this.logService)
       return response.status(400).json({ message: 'Missing fields' })
     }
+
     if (password.length < 8) {
       await LogService.execute({ from: 'authService', data: 'Password must be at least 8 characters', date: new Date(), status: 'error' }, this.logService)
       return response.status(400).json({ message: 'Password must be at least 8 characters' })

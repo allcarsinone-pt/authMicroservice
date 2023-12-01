@@ -1,12 +1,40 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Register User</title>
+  <title>AllCarsInOner</title>
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 </head>
 <body>
+
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <a class="navbar-brand" href="#">AllCarsInOne</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav">
+        <li class="nav-item">
+          <a class="nav-link" href="login.html">Login</a>
+        </li>
+        <li class="nav-item active">
+          <a class="nav-link" href="profile.html">Profile</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="register.html">Register</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="users.html">Users</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="recoverpwd.html">Recover password</a>
+        </li>
+      </ul>
+    </div>
+  </nav>
+
   <div class="container">
-    <h1>Register User</h1>
+    <h1>User Profile</h1>
     <form method="POST" id='regform'>
       <div class="form-group">
         <label for="username">Username</label>
@@ -20,7 +48,6 @@
         <label for="name"> Name</label>
         <input type="text" class="form-control" id="name" name="name" placeholder="Enter Name">
       </div>
-<!--
       <div class="form-group">
         <label for="lastname">Last name</label>
         <input type="text" class="form-control" id="lastname" name="lastname" placeholder="Enter Last name">
@@ -34,21 +61,6 @@
         <label for="create_date">Create date</label>
         <input type="text" class="form-control" id="create_date" name="create_date" placeholder="Create date">
       </div>
-
-      <div class="form-group">
-        <label for="register_date">Register date</label>
-        <input type="text" class="form-control" id="register_date" name="register_date" placeholder="register_date date">
-      </div>
-
-      <div class="form-group">
-        <label for="active">Active</label>
-        <input type="text" class="form-control" id="active" name="active" placeholder="Active">
-      </div>
-      <div class="form-group">
-        <label for="photo">Photo</label>
-        <input type="text" class="form-control" id="photo" name="photo" placeholder="Photo">
-      </div>
--->
       <div class="form-group">
         <label for="roleId">Profile</label>
         <input type="text" class="form-control" id="roleId" name="roleId" placeholder="Profile">
