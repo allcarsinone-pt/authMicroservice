@@ -15,6 +15,7 @@ class LoginUseCase {
   async execute (loginDto, hashAlgorithm) {
     const withErrorHandling = handleError(async () => {
       const user = await this.userRepository.findByEmail(loginDto.email)
+      console.log(user)
       if (!user) {
         return Result.failed(new Error('Email or password incorrect'))
       }
