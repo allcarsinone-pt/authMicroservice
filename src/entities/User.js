@@ -56,6 +56,9 @@ class User {
     if (username.length < 6) {
       throw new Error('Username is required')
     }
+    if (password.length < 6) {
+      throw new Error('Password must be at least 8 characters long')
+    }
     if (role_id === 0) {
       throw new Error('Role is required')
     }

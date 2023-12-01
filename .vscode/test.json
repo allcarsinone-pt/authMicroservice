@@ -11,7 +11,8 @@
             "skipFiles": [
                 "<node_internals>/**"
             ],
-            "program": "${workspaceFolder}/auth-postgres.test.js"
+            //"program": "${workspaceFolder}/auth-postgres.test.js"
+            "program": "${workspaceFolder}/src/usecases/tests/RegisterUser.test.js"
         }
     ]
 }

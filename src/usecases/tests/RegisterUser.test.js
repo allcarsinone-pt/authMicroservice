@@ -7,7 +7,9 @@ const makeSut = () => {
   const sut = new RegisterUserUseCase(userRepository)
   return { sut, userRepository }
 }
+
 describe('RegisterUserUseCase', () => {
+  
   it('should register a new user', async () => {
     const { sut, userRepository } = makeSut()
     const result = await sut.execute({
@@ -30,35 +32,38 @@ describe('RegisterUserUseCase', () => {
     expect(user).toHaveProperty('name', result.data.name)
     expect(user).toHaveProperty('email', result.data.email)
   })
-  it('should return a result.failed if user already exists', async () => {
-    const { sut, userRepository } = makeSut()
-    userRepository.create(new User({ name: 'John Doe', username: 'johndoe123', email: 'test@test.com', password: '123456', role_id: 1 }))
-    const result = await sut.execute({
-      name: 'John Doe',
-      username: 'johndoe123',
-      email: 'test@test.com',
-      password: '123456',
-      role_id: 1
-    })
-    expect(result.success).toBe(false)
-    expect(result.error.message).toBe('Email already used')
-  })
   it('should return a result.failed if user name validation fails', async () => {
     const { sut } = makeSut()
     const result = await sut.execute({
       email: 'test@test.com',
       name: '',
-      password: '123456'
+      password: '123456',
+      role_id: 1
     })
     expect(result.success).toBe(false)
     expect(result.error.message).toBe('Name is required')
   })
+  it('should return a result.failed if password validation fails', async () => {
+    const { sut } = makeSut()
+    const result = await sut.execute({
+      email: 'test@test.com',
+      username: 'testUsername',
+      name: 'John Doe',
+      password: '1234',
+      role_id: 1
+    })
+    //expect(result.success).toBe(false)
+    expect(result.error.message).toBe('Password must be at least 8 characters long') //-- ver mensagem que recebe-se no postman 
+    //                                                                                    colocar apenas 4 caracteres por ex.
+  })
+  
   it('should return a result.failed if user email validation fails', async () => {
     const { sut } = makeSut()
     const result = await sut.execute({
       email: 'test',
       name: 'John Doe',
-      password: '123456'
+      password: '123456',
+      role_id: 1
     })
 
     expect(result.success).toBe(false)

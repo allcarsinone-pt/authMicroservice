@@ -3,7 +3,7 @@
     // Focalizar para exibir as descrições dos atributos existentes.
     // Para obter mais informações, acesse: https://go.microsoft.com/fwlink/?linkid=830387
     "version": "0.2.0",
-    "configurations": [
+    "configurations": [ 
         {
             "type": "node",
             "request": "launch",
@@ -12,6 +12,7 @@
                 "<node_internals>/**"
             ],
             "program": "${workspaceFolder}/server.js"
+            //"program": "${workspaceFolder}/src/usecases/tests/RegisterUser.test.js"
         }
     ]
 }
