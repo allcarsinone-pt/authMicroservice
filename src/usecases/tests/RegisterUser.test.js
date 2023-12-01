@@ -17,7 +17,7 @@ describe('RegisterUserUseCase', () => {
       password: '12345678',
       role_id: 1
     })
-
+    
     expect(result.success).toBe(true)
     expect(result.data).toHaveProperty('id')
     expect(result.data).toHaveProperty('name', 'John Doe')

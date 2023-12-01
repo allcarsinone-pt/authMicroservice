@@ -18,9 +18,9 @@ console.log(process.env.DATABASE_URL)
 app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument))
 
 // Midleware
-//app.use('/', express.static(path.join(__dirname, 'src/static')))
-//app.use(bodyParser.json())
-//app.use(bodyParser.urlencoded({ extended: false })) //parse application/x-www-form-urlencoded
+app.use('/', express.static(path.join(__dirname, 'src/static')))
+app.use(bodyParser.json())
+app.use(bodyParser.urlencoded({ extended: false })) //parse application/x-www-form-urlencoded
 
 app.listen(process.env.SERVER_PORT || 3000, () => {
   console.log(`Server is running on http://localhost:${process.env.SERVER_PORT || 3000}/`)

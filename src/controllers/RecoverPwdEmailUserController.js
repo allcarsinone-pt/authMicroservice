@@ -1,7 +1,7 @@
 const RecoverPwdEmailUseCase = require('../usecases/RecoverPwdEmailUseCase/RecoverPwdEmail.usecase')
 const jwt = require('jsonwebtoken')
 const LogService = require('./services/LogService')
-class LoginController {
+class RecoverPwdEmailController {
   constructor (userRepository, secret, logService) {
     this.userRepository = userRepository
     this.secret = secret
@@ -25,4 +25,4 @@ class LoginController {
   }
 }
 
-module.exports = LoginController
+module.exports = RecoverPwdEmailController

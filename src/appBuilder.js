@@ -15,7 +15,7 @@ function makeApp (userRepository, logAdapter = new LogMockAdapter()) {
   app.set('logService', logAdapter)
   app.set('registerUserController', new RegisterUserController(userRepository, logAdapter))
   app.set('editUserController', new EditUserController(userRepository, logAdapter))
-  app.set('deleteUserController', new DeleteUserController(userRepository, process.env.SECRET_JWT, process.env.ROLE_ADMIN, logAdapter))
+  app.set('deleteUserController', new DeleteUserController(userRepository, process.env.SECRET_JWT || 'secret', logAdapter))
   app.set('changePwdUserController', new ChangePwdUserController(userRepository, process.env.SECRET_JWT || 'secret', logAdapter))
   app.set('recoverPwdUserController', new RecoverPwdUserController(userRepository, process.env.SECRET_JWT || 'secret', logAdapter))
   app.set('recoverPwdEmailUserController', new RecoverPwdEmailUserController(userRepository, process.env.SECRET_JWT || 'secret', logAdapter))

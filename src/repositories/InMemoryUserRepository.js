@@ -39,6 +39,14 @@ class InMemoryUserRepository {
     return true
   }
 
+  async roleExists(role_Id) {
+    const roles = [{id: 1, name: 'admin'}, {id:2, name: 'stand'}, {id: 3, name: 'user'}]
+    const role = roles.find((r)=> r.id === role_Id)    
+    if(!role) 
+      return false
+    return true
+  }
+
   async changePwd(user) {
     const index = this.users.findIndex((u) => u.id === user.id)
     this.users[index].id = user.id

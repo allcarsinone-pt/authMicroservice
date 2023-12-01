@@ -7,7 +7,7 @@ const app = makeApp(userRepository)
 const request = require('supertest')(app)
 const bcrypt = require('bcrypt')
 
-const { GenericContainer, PullPolicy } = require('testcontainers')
+const { GenericContainer, PullPolicy, log } = require('testcontainers')
 
 const container = new GenericContainer('postgres', 'latest')
 let startedContainer
@@ -113,10 +113,8 @@ describe('Tests', () => {
     beforeAll(async () => {
       const salt = bcrypt.genSaltSync(10)
       const hash = bcrypt.hashSync('12345678', salt)
-
       const user = { email: 'test1@test.com', name: 'John Doe', username: 'test_username', password: hash, role_id: 2 }
       await userRepository.create(new User(user))
-
       token = await request.post('/users/login').send({ email: 'test1@test.com', password: '12345678' })
       token = token.body.token
       tokenCopy = token
@@ -144,18 +142,27 @@ describe('Tests', () => {
   })
 
   describe('GET /users/delete', () => {
-    let token
-    let tokenCopy = ''
-
+    let token, token2, token3, teste, teste2, teste3
     beforeAll(async () => {
+      await userRepository.wipe()
       const salt = bcrypt.genSaltSync(10)
       const hash = bcrypt.hashSync('12345678', salt)
-      const user = { email: 'test2@test.com', name: 'John Doe', username: 'test_username2', password: hash, role_id: 2, id: 1 }
-      await userRepository.create(new User(user))
+      const user = { email: 'test2@test.com', name: 'John Client', username: 'test_username1', password: hash, role_id: 3, id: 1 }
+      teste = await userRepository.create(new User(user))
+      const user2 = { email: 'test3@test.com', name: 'Doe Manager', username: 'test_username2', password: hash, role_id: 2, id: 2 }
+      teste2 = await userRepository.create(new User(user2))
+      const user3 = { email: 'admin@test.com', name: 'Admin Doe', username: 'test_username3', password: hash, role_id: 1, id: 3 }
+      teste3 = await userRepository.create(new User(user3))
       token = await request.post('/users/login').send({ email: 'test2@test.com', password: '12345678' })
       token = token.body.token
+      token2 = await request.post('/users/login').send({ email: 'test3@test.com', password: '12345678' })
+      token2 = token2.body.token
+      token3 = await request.post('/users/login').send({ email: 'admin@test.com', password: '12345678' })
+      token3 = token3.body.token
       tokenCopy = token
-      console.log(token)
+      tokenCopy2 = token2
+      tokenCopy3 = token3
+      console.log(tokenCopy, tokenCopy2, tokenCopy3)
     })
     beforeEach(async () => {
       token = tokenCopy
@@ -164,14 +171,18 @@ describe('Tests', () => {
     afterAll(async () => {
     })
 
-    it('should return 400 if another user is removed', async () => {
-      const response = await request.delete('/users/delete').set('Authorization', `Bearer ${token}`).send({ id: 2 })
-      expect(response.status).toBe(400)
+    it('should return 400 when not admin and trying to remove another user', async () => {
+      const response = await request.delete('/users/delete').set('Authorization', `Bearer ${token2}`).send({ id: teste3.id })
+      expect(response.status).toBe(403)
+      expect(response.body.message).toBe('Unauthorized delete')
     })
 
     it('should return 200 if user is removed', async () => {
-      const response = await request.delete('/users/delete').set('Authorization', `Bearer ${token}`).send({ id: 1 })
+      console.log('IDS ----------------------------------------------------------------------')
+      console.log(teste.id + ' - ' + teste2.id + ' - ' + teste3.id)
+      const response = await request.delete('/users/delete').set('Authorization', `Bearer ${token}`).send({ id: teste.id })
       expect(response.status).toBe(200)
     })
+    
   })
 })
