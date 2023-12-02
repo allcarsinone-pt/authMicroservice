@@ -9,8 +9,10 @@ const RecoverPwdEmailUserController = require('./controllers/RecoverPwdEmailUser
 const LoginController = require('./controllers/LoginController')
 const ValidateAuthController = require('./controllers/ValidateAuthController')
 const LogMockAdapter = require('./adapters/LogMockAdapter')
+const cors = require( 'cors' )
 function makeApp (userRepository, logAdapter = new LogMockAdapter()) {
   const app = express()
+  app.use( cors() );
   app.use(express.json())
   app.set('logService', logAdapter)
   app.set('registerUserController', new RegisterUserController(userRepository, logAdapter))
