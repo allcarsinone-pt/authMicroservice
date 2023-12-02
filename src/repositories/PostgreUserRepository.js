@@ -1,6 +1,6 @@
 const pg = require('pg')
 const User = require('../entities/User')
-
+const fs = require('fs/promises')
 class PostgreUserRepository {
   constructor (baseURI) {
     this.baseURI = baseURI
@@ -110,6 +110,16 @@ class PostgreUserRepository {
       return undefined
     }
     return new User({ ...result.rows[0] })
+  }
+
+  async resetdatabase() {
+    const client = new pg.Client(this.baseURI)
+    await client.connect()
+
+    const query = await fs.readFile('./database/reset-database.sql', 'utf8')
+    await client.query(query)
+    await client.end()
+    return true
   }
 }
 

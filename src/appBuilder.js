@@ -10,6 +10,7 @@ const LoginController = require('./controllers/LoginController')
 const ValidateAuthController = require('./controllers/ValidateAuthController')
 const LogMockAdapter = require('./adapters/LogMockAdapter')
 const cors = require( 'cors' )
+const ResetDatabaseController = require('./controllers/ResetDatabaseController')
 function makeApp (userRepository, logAdapter = new LogMockAdapter()) {
   const app = express()
   app.use( cors() );
@@ -23,6 +24,7 @@ function makeApp (userRepository, logAdapter = new LogMockAdapter()) {
   app.set('recoverPwdEmailUserController', new RecoverPwdEmailUserController(userRepository, process.env.SECRET_JWT || 'secret', logAdapter))
   app.set('loginController', new LoginController(userRepository, process.env.SECRET_JWT || 'secret', logAdapter))
   app.set('validateAuthController', new ValidateAuthController(userRepository, process.env.SECRET_JWT || 'secret', logAdapter))
+  app.set('resetDatabaseController', new ResetDatabaseController(userRepository, process.env.SECRET_JWT || 'secret', logAdapter))
   app.use('/users', router)
   return app
 }

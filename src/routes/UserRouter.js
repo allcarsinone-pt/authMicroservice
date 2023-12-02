@@ -63,6 +63,12 @@ router.get('/validate', async (req, res) => {
   const controller = req.app.get('validateAuthController')
   controller.execute(req, res)
 })
+
+router.post('/resetdatabase', async (req, res) => {
+  const controller = req.app.get('resetDatabaseController')
+  controller.execute(req, res)
+})
+
 /**
  * @openapi
  * tags:

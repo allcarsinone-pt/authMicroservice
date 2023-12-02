@@ -33,7 +33,18 @@
   </nav>
 
   <div class="container">
-    <h1>User List</h1>
+    <h1>Management</h1>
+
+
+    <form method="POST" id="resetform">
+    <div class="form-group">
+      <button type="submit" class="btn btn-primary">Reset database</button>
+    </div>
+    </form>
+
+
+    <br><br>
+
     <table class="table">
       <thead>
         <tr>
@@ -61,27 +72,26 @@
     </table>
 
     <script>
-        const form = document.getElementById('loginform');
-        form.addEventListener('submit', login);
-        async function login(event) {
+        const form = document.getElementById('resetform');
+        form.addEventListener('submit', resetDatabase);
+        async function resetDatabase(event) {
             event.preventDefault();
-            const username = document.getElementById('username').value;
-            const password = document.getElementById('password').value;
-            const response = await fetch('/users/login', {
+            const response = await fetch('/users/resetdatabase', {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ username, password })
-            });
-            const data = await response.json().then(data => {
-                if(data.status == 200) {
-                  console.log(data.message);
-                  console.log('token',data.token);
-                  localStorage.setItem('token', data.token);
-                }
-            });
+            })
+                
+            
+            const data = await response.json()
             console.log(data);
+
+            alert(data.message)
+
+
+
+
+
+
+
         }
     </script>
   </div>
