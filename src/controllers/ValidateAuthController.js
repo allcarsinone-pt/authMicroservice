@@ -1,6 +1,8 @@
 const jwt = require('jsonwebtoken')
 const ValidateAuthUseCase = require('../usecases/ValidateAuthUseCase/ValidateAuth.usecase')
 const LogService = require('./services/LogService')
+const { Client } = require('@elastic/elasticsearch');
+
 /**
  * @description Controller to validate a user
  * @param {*} userRepository repository of user
@@ -11,6 +13,13 @@ class ValidateAuthController {
     this.userRepository = userRepository
     this.secret = secret
     this.logService = logService
+    this.elasticsearchClient = new Client({ 
+      node: 'http://localhost:9200',
+      log: 'trace',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    });
   }
 
   /**
@@ -29,13 +38,34 @@ class ValidateAuthController {
       const validateAuthUseCase = new ValidateAuthUseCase(this.userRepository)
       const result = await validateAuthUseCase.execute(user)
       if (!result.success) {
-        LogService.execute({ from: 'authService', data: result.error.message, date: new Date(), status: 'error' }, this.logService)
+        try {
+          const result = await this.elasticsearchClient.index({
+            index: 'logs',
+            body: { message: result.error.message, timestamp: new Date(), level: 'error',},
+          });
+        } catch (error) {
+          console.error('Failed to index document:', error);
+        }
         return res.status(500).json({ error: result.error.message })
       }
-      LogService.execute({ from: 'authService', data: `${result.data.id}-${result.data.role_id} validated`, date: new Date(), status: 'info' }, this.logService)
+      try {
+        const result = await this.elasticsearchClient.index({
+          index: 'logs',
+          body: { message: `${result.data.id}-${result.data.role_id} validated`, timestamp: new Date(), level: 'info',},
+        });
+      } catch (error) {
+        console.error('Failed to index document:', error);
+      }
       return res.status(200).json(result.data)
     } catch (error) {
-      await LogService.execute({ from: 'authService', data: error.message, date: new Date(), status: 'error' }, this.logService)
+      try {
+        const result = await this.elasticsearchClient.index({
+          index: 'logs',
+          body: { message: error.message, timestamp: new Date(), level: 'error',},
+        });
+      } catch (error) {
+        console.error('Failed to index document:', error);
+      }
       return res.status(401).json({ error: error.message })
     }
   }

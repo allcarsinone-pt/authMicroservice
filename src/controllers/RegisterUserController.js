@@ -1,6 +1,7 @@
 const RegisterUserUseCase = require('../usecases/RegisterUserUseCase/RegisterUser.usecase')
 const bcrypt = require('bcrypt') // ? - tem de estar aqui ? TIP: perguntar ao professor de arquitetura
 const LogService = require('./services/LogService')
+const { Client } = require('@elastic/elasticsearch');
 // Acoplado com o express. O req e o res têm de estar aqui ou não vale a pena complicar ?- perguntar ao professor de arquitetura
 
 /**
@@ -12,6 +13,13 @@ class RegisterUserController {
   constructor (userRepository, logService) {
     this.userRepository = userRepository
     this.logService = logService
+    this.elasticsearchClient = new Client({ 
+      node: 'http://localhost:9200',
+      log: 'trace',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    });
   }
 
   /**
@@ -24,16 +32,40 @@ class RegisterUserController {
   async execute (request, response) {
     let { username, name, email, password, confirmPassword, address, city, postalcode, mobilephone, role_id } = request.body
     if (!email || !username || !name || !password || !confirmPassword || !role_id) {
-      await LogService.execute({ from: 'authService', data: 'Missing fields', date: new Date(), status: 'error' }, this.logService)
-      return response.status(400).json({ message: 'Missing fields' })
+      try {
+        const result = await this.elasticsearchClient.index({
+          index: 'logs',
+          body: { message: 'Missing fields.', timestamp: new Date(), level: 'error',},
+        });
+      } catch (error) {
+        console.error('Failed to index document:', error);
+      }
+
+      return response.status(400).json({ message: 'Missing fields' });
     }
 
     if (password.length < 8) {
-      await LogService.execute({ from: 'authService', data: 'Password must be at least 8 characters', date: new Date(), status: 'error' }, this.logService)
+      try {
+        const result = await this.elasticsearchClient.index({
+          index: 'logs',
+          body: { message: 'Password must be at least 8 characters', timestamp: new Date(), level: 'error',},
+        });
+      } catch (error) {
+        console.error('Failed to index document:', error);
+      }
+      
       return response.status(400).json({ message: 'Password must be at least 8 characters' })
     }
     if (password !== confirmPassword) {
-      await LogService.execute({ from: 'authService', data: 'Passwords don\'t match', date: new Date(), status: 'error' }, this.logService)
+      try {
+        const result = await this.elasticsearchClient.index({
+          index: 'logs',
+          body: { message: 'Passwords don\'t match', timestamp: new Date(), level: 'error',},
+        });
+      } catch (error) {
+        console.error('Failed to index document:', error);
+      }
+      
       return response.status(400).json({ message: 'Passwords don t match' })
     }
 
@@ -43,14 +75,29 @@ class RegisterUserController {
     const user = await usecase.execute({ username, name, email, password, address, city, postalcode, mobilephone, role_id })
 
     if (!user.success) {
-      await LogService.execute({ from: 'authService', data: `${user.error.message}`, date: new Date(), status: 'error' }, this.logService)
+      try {
+        const result = await this.elasticsearchClient.index({
+          index: 'logs',
+          body: { message: `${user.error.message}`, timestamp: new Date(), level: 'error',},
+        });
+      } catch (error) {
+        console.error('Failed to index document:', error);
+      }
+      
       if (user.error.message === 'Email already used' || user.error.message === 'Name is required' || user.error.message === 'Invalid email') {
         return response.status(400).json({ message: user.error.message })
       } else {
         return response.status(500).json({ message: 'Internal server error' })
       }
     }
-    await LogService.execute({ from: 'authService', data: `${user.data.email}-${user.data.role_id} registered`, date: new Date(), status: 'info' }, this.logService)
+    try {
+      const result = await this.elasticsearchClient.index({
+        index: 'logs',
+        body: { message: `${user.data.email}-${user.data.role_id} registered`, timestamp: new Date(), level: 'info',},
+      });
+    } catch (error) {
+      console.error('Failed to index document:', error);
+    }
     return response.status(201).json(user.data)
   }
 }

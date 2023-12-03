@@ -1,6 +1,7 @@
 const EditUserUseCase = require('../usecases/EditUserUseCase/EditUser.usecase')
 const LogService = require('./services/LogService')
 // Acoplado com o express. O req e o res têm de estar aqui ou não vale a pena complicar ?- perguntar ao professor de arquitetura
+const { Client } = require('@elastic/elasticsearch');
 
 /**
  * @class EditUserController
@@ -11,6 +12,13 @@ class EditUserController {
   constructor (userRepository, logService) {
     this.userRepository = userRepository
     this.logService = logService
+    this.elasticsearchClient = new Client({ 
+      node: 'http://localhost:9200',
+      log: 'trace',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    });
   }
 
   /**
@@ -23,7 +31,14 @@ class EditUserController {
   async execute (request, response) {
     const { id, username, name, address, city, postalcode, mobilephone, email, role_id } = request.body
     if (!id || !email || !username || !name || !role_id) {
-      await LogService.execute({ from: 'authService', data: 'Missing fields', date: new Date(), status: 'error' }, this.logService)
+      try {
+        const result = await this.elasticsearchClient.index({
+          index: 'logs',
+          body: { message: 'Missing fields.', timestamp: new Date(), level: 'error',},
+        });
+      } catch (error) {
+        console.error('Failed to index document:', error);
+      }
       return response.status(400).json({ message: 'Missing fields' })
     }
 
@@ -33,14 +48,28 @@ class EditUserController {
     })
 
     if (!user.success) {
-      await LogService.execute({ from: 'authService', data: `${user.error.message}`, date: new Date(), status: 'error' }, this.logService)
+      try {
+        const result = await this.elasticsearchClient.index({
+          index: 'logs',
+          body: { message: `${user.error.message}`, timestamp: new Date(), level: 'error',},
+        });
+      } catch (error) {
+        console.error('Failed to index document:', error);
+      }
       if (user.error.message === 'Email already used' || user.error.message === 'Name is required' || user.error.message === 'Invalid user') {
         return response.status(400).json({ message: user.error.message })
       } else {
         return response.status(500).json({ message: 'Internal server error' })
       }
     }
-    await LogService.execute({ from: 'authService', data: `${user.data.id}-${user.data.role_id} edited`, date: new Date(), status: 'info' }, this.logService)
+    try {
+      const result = await this.elasticsearchClient.index({
+        index: 'logs',
+        body: { message: `${user.data.id}-${user.data.role_id} edited`, timestamp: new Date(), level: 'info',},
+      });
+    } catch (error) {
+      console.error('Failed to index document:', error);
+    }
     return response.status(201).json(user.data)
   }
 }
