@@ -11,7 +11,7 @@ const LogService = require('./services/LogService')
 class RegisterUserController {
   constructor (userRepository, logService) {
     this.userRepository = userRepository
-    this.logService = LogService
+    this.logService = new LogService()
   }
 
   /**

@@ -6,7 +6,7 @@ class RecoverPwdEmailController {
   constructor (userRepository, secret, logService) {
     this.userRepository = userRepository
     this.secret = secret
-    this.logService = LogService
+    this.logService = new LogService()
   }
 
   async execute (req, res) {

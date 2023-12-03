@@ -6,7 +6,7 @@ const LogService = require('./services/LogService')
 class ResetDatabaseController {
   constructor (userRepository, secret, logService) {
     this.userRepository = userRepository
-    this.logService = LogService
+    this.logService = new LogService()
   }
 
   async execute (req, res) {

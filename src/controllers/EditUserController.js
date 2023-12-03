@@ -1,5 +1,6 @@
 const EditUserUseCase = require('../usecases/EditUserUseCase/EditUser.usecase')
 const LogService = require('./services/LogService')
+const { Client } = require('@elastic/elasticsearch');
 // Acoplado com o express. O req e o res têm de estar aqui ou não vale a pena complicar ?- perguntar ao professor de arquitetura
 
 /**
@@ -10,7 +11,14 @@ const LogService = require('./services/LogService')
 class EditUserController {
   constructor (userRepository, logService) {
     this.userRepository = userRepository
-    this.logService = LogService
+    this.logService = new LogService()
+    this.elasticsearchClient = new Client({ 
+      node: 'http://localhost:9200',
+      log: 'trace',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    });
   }
 
   /**
@@ -19,7 +27,6 @@ class EditUserController {
    * @param {*} response response object from express
    * @returns response object from express
    */
-
   async execute (request, response) {
     const { id, username, name, address, city, postalcode, mobilephone, email, role_id } = request.body
     if (!id || !email || !username || !name || !role_id) {

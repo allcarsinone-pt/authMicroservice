@@ -13,7 +13,7 @@ class ChangePwdUserController {
   constructor (userRepository, secret, logService) {
     this.userRepository = userRepository
     this.secret = secret
-    this.logService = LogService
+    this.logService = new LogService()
   }
 
   /**

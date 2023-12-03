@@ -1,3 +1,4 @@
+const { Client } = require('@elastic/elasticsearch');
 
 class LogService {
 
@@ -11,7 +12,8 @@ class LogService {
     });
   }
   
-  static async execute (service, message, levelType) {
+  async execute (service, message, levelType) {
+
     try {
       const result = await this.elasticsearchClient.index({
         index: 'logs',
