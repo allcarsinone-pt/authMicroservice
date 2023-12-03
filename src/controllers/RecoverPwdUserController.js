@@ -3,7 +3,6 @@ const ValidateAuthUseCase = require('../usecases/ValidateAuthEmailUseCase/Valida
 const bcrypt = require('bcrypt') // ? - tem de estar aqui ? TIP: perguntar ao professor de arquitetura
 const jwt = require('jsonwebtoken')
 const LogService = require('./services/LogService')
-const { Client } = require('@elastic/elasticsearch');
 
 /**
  * @class ChangePwdUserController
@@ -14,14 +13,7 @@ class RecoverPwdUserController {
   constructor (userRepository, secret, logService) {
     this.userRepository = userRepository
     this.secret = secret
-    this.logService = logService
-    this.elasticsearchClient = new Client({ 
-      node: 'http://localhost:9200',
-      log: 'trace',
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    });
+    this.logService = LogService
   }
 
   /**
@@ -35,14 +27,7 @@ class RecoverPwdUserController {
     const { token, password, confirmPassword } = req.body
 
     if (!token || !password || !confirmPassword) {
-      try {
-        const result = await this.elasticsearchClient.index({
-          index: 'logs',
-          body: { message: 'Missing fields', timestamp: new Date(), level: 'error',},
-        });
-      } catch (error) {
-        console.error('Failed to index document:', error);
-      }
+      this.logService.execute("AuthServiceRevoverPwd", 'Missing fields.', "error")
       return res.status(400).json({ message: 'Missing fields' })
     }
 
@@ -50,28 +35,14 @@ class RecoverPwdUserController {
     const validateAuthEmailUseCase = new ValidateAuthUseCase(this.userRepository)
     const result = await validateAuthEmailUseCase.execute(userTok)
     if (!result.success) {
-      try {
-        const result = await this.elasticsearchClient.index({
-          index: 'logs',
-          body: { message: result.error.message, timestamp: new Date(), level: 'error',},
-        });
-      } catch (error) {
-        console.error('Failed to index document:', error);
-      }
+      this.logService.execute("AuthServiceRevoverPwd", result.error.message, "error")
       return res.status(500).json({ error: result.error.message })
     }
 
     const useCase = new RecoverPwdUserUseCase(this.userRepository)
 
     if (password !== confirmPassword) {
-      try {
-        const result = await this.elasticsearchClient.index({
-          index: 'logs',
-          body: { message: 'Passwords do not match', timestamp: new Date(), level: 'error',},
-        });
-      } catch (error) {
-        console.error('Failed to index document:', error);
-      }
+      this.logService.execute("AuthServiceRevoverPwd", 'Passwords do not match', "error")
       return res.status(400).json({ message: 'Passwords do not match' })
     }
 
@@ -81,14 +52,7 @@ class RecoverPwdUserController {
     const user = await useCase.execute({ email, hashedPassword })
 
     if (!user.success) {
-      try {
-        const result = await this.elasticsearchClient.index({
-          index: 'logs',
-          body: { message: `${user.error.message}`, timestamp: new Date(), level: 'error',},
-        });
-      } catch (error) {
-        console.error('Failed to index document:', error);
-      }
+      this.logService.execute("AuthServiceRevoverPwd", `${user.error.message}`, "error")
       if (user.error.message === 'User not found') {
         return res.status(400).json({ message: user.error.message })
       } else {
@@ -96,14 +60,8 @@ class RecoverPwdUserController {
       }
     }
 
-    try {
-      const result = await this.elasticsearchClient.index({
-        index: 'logs',
-        body: { message: `${user.data.id} password recovered`, timestamp: new Date(), level: 'info',},
-      });
-    } catch (error) {
-      console.error('Failed to index document:', error);
-    }
+    this.logService.execute("AuthServiceRevoverPwd", `${user.data.id} password recovered`, "info")
+    
     return res.status(201).json(user.data)
   }
 }
