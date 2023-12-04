@@ -2,7 +2,7 @@ const RecoverPwdUserUseCase = require('../usecases/RecoverPwdUseCase/RecoverPwd.
 const ValidateAuthUseCase = require('../usecases/ValidateAuthEmailUseCase/ValidateAuthEmail.usecase')
 const bcrypt = require('bcrypt') // ? - tem de estar aqui ? TIP: perguntar ao professor de arquitetura
 const jwt = require('jsonwebtoken')
-const LogService = require('./services/LogService')
+
 
 /**
  * @class ChangePwdUserController
@@ -27,7 +27,7 @@ class RecoverPwdUserController {
     const { token, password, confirmPassword } = req.body
 
     if (!token || !password || !confirmPassword) {
-      await LogService.execute({ from: 'authService', data: 'Missing fields', date: new Date(), status: 'error' }, this.logService)
+      this.logService.execute("AuthServiceRevoverPwd", 'Missing fields.', "error")
       return res.status(400).json({ message: 'Missing fields' })
     }
 
@@ -35,14 +35,14 @@ class RecoverPwdUserController {
     const validateAuthEmailUseCase = new ValidateAuthUseCase(this.userRepository)
     const result = await validateAuthEmailUseCase.execute(userTok)
     if (!result.success) {
-      LogService.execute({ from: 'authService', data: result.error.message, date: new Date(), status: 'error' }, this.logService)
+      this.logService.execute("AuthServiceRevoverPwd", result.error.message, "error")
       return res.status(500).json({ error: result.error.message })
     }
 
     const useCase = new RecoverPwdUserUseCase(this.userRepository)
 
     if (password !== confirmPassword) {
-      await LogService.execute({ from: 'authService', data: 'Passwords do not match', date: new Date(), status: 'error' }, this.logService)
+      this.logService.execute("AuthServiceRevoverPwd", 'Passwords do not match', "error")
       return res.status(400).json({ message: 'Passwords do not match' })
     }
 
@@ -52,14 +52,16 @@ class RecoverPwdUserController {
     const user = await useCase.execute({ email, hashedPassword })
 
     if (!user.success) {
-      await LogService.execute({ from: 'authService', data: `${user.error.message}`, date: new Date(), status: 'error' }, this.logService)
+      this.logService.execute("AuthServiceRevoverPwd", `${user.error.message}`, "error")
       if (user.error.message === 'User not found') {
         return res.status(400).json({ message: user.error.message })
       } else {
         return res.status(500).json({ message: 'Internal server error' })
       }
     }
-    await LogService.execute({ from: 'authService', data: `${user.data.id} password recovered`, date: new Date(), status: 'info' }, this.logService)
+
+    this.logService.execute("AuthServiceRevoverPwd", `${user.data.id} password recovered`, "info")
+    
     return res.status(201).json(user.data)
   }
 }

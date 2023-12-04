@@ -1,7 +1,8 @@
 const jwt = require('jsonwebtoken')
 const EditUserUseCase = require('../usecases/EditUserUseCase/EditUser.usecase')
+
 const ValidateAuthUseCase = require('../usecases/ValidateAuthUseCase/ValidateAuth.usecase')
-const LogService = require('./services/LogService')
+
 // Acoplado com o express. O req e o res têm de estar aqui ou não vale a pena complicar ?- perguntar ao professor de arquitetura
 
 /**
@@ -22,8 +23,13 @@ class EditUserController {
    * @param {*} response response object from express
    * @returns response object from express
    */
-
   async execute (request, response) {
+
+    const { id, username, name, address, city, postalcode, mobilephone, email, role_id } = request.body
+    if (!id || !email || !username || !name || !role_id) {
+      this.logService.execute("AuthServiceEdit", 'Missing fields.', "error")
+      return response.status(400).json({ message: 'Missing fields' })
+
     if (!request.headers.authorization) {
       return response.status(401).json({ error: 'No token provided' })
     }
@@ -51,18 +57,23 @@ class EditUserController {
         id, username, name, address, city, postalcode, mobilephone, email, role_id
       })
 
-      if (!user.success) {
-        await LogService.execute({ from: 'authEditService', data: `${user.error.message}`, date: new Date(), status: 'error' }, this.logService)
-        if (user.error.message === 'Email already used' || user.error.message === 'Name is required' || user.error.message === 'Invalid user') {
-          return response.status(400).json({ message: user.error.message })
-        } else {
-          return response.status(500).json({ message: 'Internal server error' })
-        }
+
+    const usecase = new EditUserUseCase(this.userRepository)
+    const user = await usecase.execute({
+      id, username, name, address, city, postalcode, mobilephone, email, role_id
+    })
+
+    if (!user.success) {
+      this.logService.execute("AuthServiceEdit", `${user.error.message}`, "error")
+      if (user.error.message === 'Email already used' || user.error.message === 'Name is required' || user.error.message === 'Invalid user') {
+        return response.status(400).json({ message: user.error.message })
+      } else {
+        return response.status(500).json({ message: 'Internal server error' })
+
       }
-      await LogService.execute({ from: 'authEditService', data: `${user.data.id}-${user.data.role_id} edited`, date: new Date(), status: 'info' }, this.logService)
-      return response.status(201).json(user.data)
+       this.logService.execute("AuthServiceEdit", `${user.data.id}-${user.data.role_id} edited`, "info")
+       return response.status(201).json(user.data)
     } catch (error) {
-      await LogService.execute({ from: 'authEditService', data: error.message, date: new Date(), status: 'error' }, this.logService)
       return response.status(401).json({ error: error.message })
     }
   }

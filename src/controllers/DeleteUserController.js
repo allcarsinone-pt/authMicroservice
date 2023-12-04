@@ -1,9 +1,8 @@
 const jwt = require('jsonwebtoken')
 const DeleteUserUseCase = require('../usecases/DeleteUserUseCase/DeleteUser.usecase')
 const ValidateAuthUseCase = require('../usecases/ValidateAuthUseCase/ValidateAuth.usecase')
-const LogService = require('./services/LogService')
-// Acoplado com o express. O req e o res têm de estar aqui ou não vale a pena complicar ?- perguntar ao professor de arquitetura
 
+// Acoplado com o express. O req e o res têm de estar aqui ou não vale a pena complicar ?- perguntar ao professor de arquitetura
 const ROLE_ADMIN = 1
 
 /**
@@ -36,13 +35,13 @@ class DeleteUserController {
       const validateAuthUseCase = new ValidateAuthUseCase(this.userRepository)
       const resultAUth = await validateAuthUseCase.execute(userAuth)
       if (!resultAUth.success) {
-        LogService.execute({ from: 'authDeleteService', data: resultAUth.error.message, date: new Date(), status: 'error' }, this.logService)
+        this.logService.execute("AuthServiceDelete", resultAUth.error.message, "error")
         return response.status(500).json({ error: resultAUth.error.message })
       }
 
       const { id } = request.body
       if (!id) {
-        await LogService.execute({ from: 'authDeleteService', data: 'Missing fields', date: new Date(), status: 'error' }, this.logService)
+        this.logService.execute("AuthServiceDelete", "Missing fields", "error")
         return response.status(400).json({ message: 'Missing fields' })
       }
 
@@ -51,10 +50,11 @@ class DeleteUserController {
       if (isAdmin) {
         const userIsLastAdmin = await this.userRepository.isLastAdmin(ROLE_ADMIN)
         if (userIsLastAdmin) {
+          this.logService.execute("AuthServiceDelete", "Last admin cannot be removed", "info")
           return response.status(400).json({ message: 'Last admin cannot be removed' })
         }
       } else if (resultAUth.data.id !== id) { // If is not admin only can remove him self
-        await LogService.execute({ from: 'authDeleteService', data: 'Unauthorized delete', date: new Date(), status: 'error' }, this.logService)
+        this.logService.execute("AuthServiceDelete", "Unauthorized delete", "error")
         return response.status(403).json({ message: 'Unauthorized delete' })
       }
 
@@ -62,17 +62,17 @@ class DeleteUserController {
       const user = await useCase.execute({ id })
 
       if (!user.success) {
-        await LogService.execute({ from: 'authDeleteService', data: `${user.error.message}`, date: new Date(), status: 'error' }, this.logService)
+        this.logService.execute("AuthServiceDelete", `${user.error.message}`, "error")
         if (user.error.message === 'User not found') {
           return response.status(400).json({ message: user.error.message })
         } else {
           return response.status(500).json({ message: 'Internal server error' })
         }
       }
-      await LogService.execute({ from: 'authDeleteService', data: `${user.data.id} deleted`, date: new Date(), status: 'info' }, this.logService)
+      this.logService.execute("AuthServiceDelete", `${user.data.id} deleted`, "error")
       return response.status(200).json(user.data)
     } catch (error) {
-      await LogService.execute({ from: 'authDeleteService', data: error.message, date: new Date(), status: 'error' }, this.logService)
+      this.logService.execute("AuthServiceDelete", `${error.message}`, "error")
       return response.status(401).json({ error: error.message })
     }
   }
