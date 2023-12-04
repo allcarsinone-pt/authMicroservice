@@ -6,7 +6,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 </head>
 <body>
-
   <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <a class="navbar-brand" href="index.html"><img height="70" src="images/logoSmall.png" alt="AllCarsInOne"></img></aa>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -17,7 +16,7 @@
         <li class="nav-item">
             <a class="nav-link"></a>
         </li>
-        <li class="nav-item">
+        <li class="nav-item active">
             <a class="nav-link" href="login.html">Login</a>
         </li>
         <li class="nav-item">
@@ -29,44 +28,63 @@
         <li class="nav-item">
             <a class="nav-link" href="users.html">Users</a>
         </li>
-        <li class="nav-item active">
+        <li class="nav-item">
             <a class="nav-link" href="recoverpwd.html">Recover password</a>
         </li>
         </ul>
     </div>
-  </nav>
-  
-  <div class="container">
-    <h1>Recover password User</h1>
-    <form method="POST" id='regform'>
+</nav>
 
+  <div class="container">
+    <h1>User Login</h1>
+    <form method="POST" id='loginform'>
       <div class="form-group">
-        <label for="email">Email</label>
-        <input type="email" class="form-control" id="email" name="email" placeholder="Enter email">
+        <label for="email">E-mail</label>
+        <input type="text" class="form-control" id="email" name="email" placeholder="Enter email">
       </div>
-      <button type="submit" class="btn btn-primary">Recover</button>
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input type="password" class="form-control" id="password" name="password" placeholder="Enter password">
+      </div>
+      <button type="submit" class="btn btn-primary">Login</button>
     </form>
 
     <script>
-        const form = document.getElementById('regform');
-        form.addEventListener('submit', async (event) => {
+        const form = document.getElementById('loginform');
+        form.addEventListener('submit', login);
+        async function login(event) {
             event.preventDefault();
             const email = document.getElementById('email').value;
-
-            //nativo do browser
-            const response = await fetch('/users/recoverpwdemail', {
+            const password = document.getElementById('password').value;
+            const response = await fetch('/users/login', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({ email: email })
+                body: JSON.stringify({ email, password })
             });
             const data = await response.json();
-            console.log(data);
-            user = { token } = data
-            alert(user.token);
-        })
+
+            if( response.status == 200 )
+            {
+              const user = { token } = data
+              window.localStorage.setItem('jwtToken', user.token);
+              
+              console.log(user.token);
+              alert(user.token);
+            }
+            else
+            {
+              console.log(data);
+              const { error } = data
+              alert(error);
+            }
+        }
     </script>
   </div>
+
+  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
 </body>
 </html>
