@@ -11,7 +11,7 @@ const express = require('express')
 
 dotenv.config()
 
-const app = makeApp(new PostgreUserRepository(process.env.DATABASE_URL))
+const app = makeApp(new PostgreUserRepository(process.env.DATABASE_URL), new RabbitMQAdapter(process.env.AMQP_URI))
 
 console.log(process.env.DATABASE_URL)
 
