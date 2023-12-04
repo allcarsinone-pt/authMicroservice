@@ -1,12 +1,12 @@
 const RecoverPwdEmailUseCase = require('../usecases/RecoverPwdEmailUseCase/RecoverPwdEmail.usecase')
 const jwt = require('jsonwebtoken')
-const LogService = require('./services/LogService')
+const { log } = require('console')
 
 class RecoverPwdEmailController {
   constructor (userRepository, secret, logService) {
     this.userRepository = userRepository
     this.secret = secret
-    this.logService = new LogService()
+    this.logService = logService
   }
 
   async execute (req, res) {

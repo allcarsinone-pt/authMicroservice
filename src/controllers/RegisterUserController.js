@@ -1,6 +1,5 @@
 const RegisterUserUseCase = require('../usecases/RegisterUserUseCase/RegisterUser.usecase')
 const bcrypt = require('bcrypt') // ? - tem de estar aqui ? TIP: perguntar ao professor de arquitetura
-const LogService = require('./services/LogService')
 // Acoplado com o express. O req e o res têm de estar aqui ou não vale a pena complicar ?- perguntar ao professor de arquitetura
 
 /**
@@ -11,7 +10,7 @@ const LogService = require('./services/LogService')
 class RegisterUserController {
   constructor (userRepository, logService) {
     this.userRepository = userRepository
-    this.logService = new LogService()
+    this.logService = logService
   }
 
   /**

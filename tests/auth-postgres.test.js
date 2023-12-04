@@ -7,7 +7,7 @@ const app = makeApp(userRepository)
 const request = require('supertest')(app)
 const bcrypt = require('bcrypt')
 
-const { GenericContainer, PullPolicy, log } = require('testcontainers')
+const { GenericContainer, PullPolicy } = require('testcontainers')
 
 const container = new GenericContainer('postgres', 'latest')
 let startedContainer

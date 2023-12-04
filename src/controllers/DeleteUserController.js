@@ -1,7 +1,7 @@
 const jwt = require('jsonwebtoken')
 const DeleteUserUseCase = require('../usecases/DeleteUserUseCase/DeleteUser.usecase')
 const ValidateAuthUseCase = require('../usecases/ValidateAuthUseCase/ValidateAuth.usecase')
-const LogService = require('./services/LogService')
+
 // Acoplado com o express. O req e o res têm de estar aqui ou não vale a pena complicar ?- perguntar ao professor de arquitetura
 const ROLE_ADMIN = 1
 
@@ -14,7 +14,7 @@ class DeleteUserController {
   constructor (userRepository, secret, logService) {
     this.userRepository = userRepository
     this.secret = secret
-    this.logService = new LogService()
+    this.logService = logService
   }
 
   /**

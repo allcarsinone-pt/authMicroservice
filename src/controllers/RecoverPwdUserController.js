@@ -2,7 +2,7 @@ const RecoverPwdUserUseCase = require('../usecases/RecoverPwdUseCase/RecoverPwd.
 const ValidateAuthUseCase = require('../usecases/ValidateAuthEmailUseCase/ValidateAuthEmail.usecase')
 const bcrypt = require('bcrypt') // ? - tem de estar aqui ? TIP: perguntar ao professor de arquitetura
 const jwt = require('jsonwebtoken')
-const LogService = require('./services/LogService')
+
 
 /**
  * @class ChangePwdUserController
@@ -13,7 +13,7 @@ class RecoverPwdUserController {
   constructor (userRepository, secret, logService) {
     this.userRepository = userRepository
     this.secret = secret
-    this.logService = new LogService()
+    this.logService = logService
   }
 
   /**

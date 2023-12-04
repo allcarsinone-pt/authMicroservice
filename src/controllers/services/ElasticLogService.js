@@ -1,6 +1,6 @@
 const { Client } = require('@elastic/elasticsearch');
 
-class LogService {
+class ElasticLogService {
 
   constructor () {
     this.elasticsearchClient = new Client({ 
@@ -25,4 +25,4 @@ class LogService {
   }
 }
 
-module.exports = LogService
+module.exports = ElasticLogService

@@ -1,14 +1,14 @@
 const LoginUseCase = require('../usecases/LoginUseCase/Login.usecase')
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
-const LogService = require('./services/LogService')
+
 
 
 class LoginController {
   constructor (userRepository, secret, logService) {
     this.userRepository = userRepository
     this.secret = secret
-    this.logService = new LogService()
+    this.logService = logService
   }
 
   async execute (req, res) {

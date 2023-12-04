@@ -1,12 +1,11 @@
 const LoginUseCase = require('../usecases/LoginUseCase/Login.usecase')
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
-const LogService = require('./services/LogService')
 
 class ResetDatabaseController {
   constructor (userRepository, secret, logService) {
     this.userRepository = userRepository
-    this.logService = new LogService()
+    this.logService = logService
   }
 
   async execute (req, res) {

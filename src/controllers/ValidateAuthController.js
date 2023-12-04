@@ -1,6 +1,5 @@
 const jwt = require('jsonwebtoken')
 const ValidateAuthUseCase = require('../usecases/ValidateAuthUseCase/ValidateAuth.usecase')
-const LogService = require('./services/LogService')
 
 /**
  * @description Controller to validate a user
@@ -11,7 +10,7 @@ class ValidateAuthController {
   constructor (userRepository, secret, logService) {
     this.userRepository = userRepository
     this.secret = secret
-    this.logService = new LogService()
+    this.logService = logService
   }
 
   /**
