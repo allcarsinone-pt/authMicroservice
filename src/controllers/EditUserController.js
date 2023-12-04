@@ -26,9 +26,10 @@ class EditUserController {
   async execute (request, response) {
 
     const { id, username, name, address, city, postalcode, mobilephone, email, role_id } = request.body
-    if (!id || !email || !username || !name || !role_id) {
+    if (!email || !username || !name || !role_id) {
       this.logService.execute("AuthServiceEdit", 'Missing fields.', "error")
       return response.status(400).json({ message: 'Missing fields' })
+    }
 
     if (!request.headers.authorization) {
       return response.status(401).json({ error: 'No token provided' })
@@ -52,28 +53,24 @@ class EditUserController {
         return response.status(400).json({ message: 'Missing fields' })
       }
 
-      const useCase = new EditUserUseCase(this.userRepository)
-      const user = await useCase.execute({
+      const usecase = new EditUserUseCase(this.userRepository)
+      const user = await usecase.execute({
         id, username, name, address, city, postalcode, mobilephone, email, role_id
       })
 
-
-    const usecase = new EditUserUseCase(this.userRepository)
-    const user = await usecase.execute({
-      id, username, name, address, city, postalcode, mobilephone, email, role_id
-    })
-
-    if (!user.success) {
-      this.logService.execute("AuthServiceEdit", `${user.error.message}`, "error")
-      if (user.error.message === 'Email already used' || user.error.message === 'Name is required' || user.error.message === 'Invalid user') {
-        return response.status(400).json({ message: user.error.message })
-      } else {
-        return response.status(500).json({ message: 'Internal server error' })
-
+      if (!user.success) {
+        this.logService.execute("AuthServiceEdit", `${user.error.message}`, "error")
+        if (user.error.message === 'Email already used' || user.error.message === 'Name is required' || user.error.message === 'Invalid user') {
+          return response.status(400).json({ message: user.error.message })
+        } else {
+          return response.status(500).json({ message: 'Internal server error' })
+        }
       }
-       this.logService.execute("AuthServiceEdit", `${user.data.id}-${user.data.role_id} edited`, "info")
-       return response.status(201).json(user.data)
-    } catch (error) {
+      this.logService.execute("AuthServiceEdit", `${user.data.id}-${user.data.role_id} edited`, "info")
+      return response.status(201).json(user.data)
+    }
+     catch (error) {
+      this.logService.execute("AuthServiceEdit", error.message, "error")
       return response.status(401).json({ error: error.message })
     }
   }

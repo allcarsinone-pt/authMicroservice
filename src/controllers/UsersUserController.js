@@ -1,7 +1,6 @@
 const jwt = require('jsonwebtoken')
 const UsersUseCase = require('../usecases/UsersUseCase/Users.usecase')
 const ValidateAuthUseCase = require('../usecases/ValidateAuthUseCase/ValidateAuth.usecase')
-const LogService = require('./services/LogService')
 
 /**
  * @class UsersUserController
@@ -32,8 +31,9 @@ class UsersUserController {
       const userAuth = jwt.verify(token, this.secret)
       const validateAuthUseCase = new ValidateAuthUseCase(this.userRepository)
       const resultEdit = await validateAuthUseCase.execute(userAuth)
+      
       if (!resultEdit.success) {
-        LogService.execute({ from: 'authEditService', data: resultEdit.error.message, date: new Date(), status: 'error' }, this.logService)
+        this.logService.execute("authEditService", resultEdit.error.message, "error")
         return response.status(500).json({ error: resultEdit.error.message })
       }
 
@@ -43,17 +43,17 @@ class UsersUserController {
       const user = await useCase.execute({})
 
       if (!user.success) {
-        await LogService.execute({ from: 'authUsersService', data: `${user.error.message}`, date: new Date(), status: 'error' }, this.logService)
+        this.logService.execute("authEditService", user.error.message, "error")
         if (user.error.message === 'No users found') {
           return response.status(400).json({ message: user.error.message })
         } else {
           return response.status(500).json({ message: 'Internal server error' })
         }
       }
-      await LogService.execute({ from: 'authUsersService', data: `${user.data.id}-${user.data.role_id} found`, date: new Date(), status: 'info' }, this.logService)
+      this.logService.execute("authEditService", `${user.data.id}-${user.data.role_id} found`, "info")
       return response.status(201).json(user.data)
     } catch (error) {
-      await LogService.execute({ from: 'authUsersService', data: error.message, date: new Date(), status: 'error' }, this.logService)
+      this.logService.execute("authEditService", error.message, "error")
       return response.status(401).json({ error: error.message })
     }
   }
