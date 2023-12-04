@@ -12,6 +12,7 @@ dotenv.config()
 
 const app = makeApp(new PostgreUserRepository(process.env.DATABASE_URL), new ElasticLogService())
 
+
 console.log(process.env.DATABASE_URL)
 
 app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument))
