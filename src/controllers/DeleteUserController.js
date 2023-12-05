@@ -47,9 +47,17 @@ class DeleteUserController {
 
       // Prevent delete last admin
       const isAdmin = (resultAUth.data.role_id === ROLE_ADMIN)
-      if (isAdmin) {
+
+      if (isAdmin) 
+      {
+        const userToDelete = await this.userRepository.findById(id)
+        if (!userToDelete) {
+          this.logService.execute("AuthServiceDelete", "User not found", "error")
+        }
+        const { role_id } = userToDelete
+        
         const userIsLastAdmin = await this.userRepository.isLastAdmin(ROLE_ADMIN)
-        if (userIsLastAdmin) {
+        if (userIsLastAdmin && role_id === ROLE_ADMIN) {
           this.logService.execute("AuthServiceDelete", "Last admin cannot be removed", "info")
           return response.status(400).json({ message: 'Last admin cannot be removed' })
         }
