@@ -50,7 +50,7 @@ class UsersUserController {
           return response.status(500).json({ message: 'Internal server error' })
         }
       }
-      this.logService.execute("authEditService", `${user.data.id}-${user.data.role_id} found`, "info")
+      this.logService.execute("authEditService", `${user.data.length} found`, "info")
       return response.status(201).json(user.data)
     } catch (error) {
       this.logService.execute("authEditService", error.message, "error")
