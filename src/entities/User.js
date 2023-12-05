@@ -1,6 +1,6 @@
 class User {
   /**
-     * @description Constructor of user entity -
+     * @description Constructor of user entity
      * @param {*} name name of user
      * @param {*} email email of user
      * @param {*} password password of user
