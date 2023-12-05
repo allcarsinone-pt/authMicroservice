@@ -4,7 +4,7 @@ class ElasticLogService {
 
   constructor () {
     this.elasticsearchClient = new Client({ 
-      node: 'http://localhost:9200',
+      node: 'http://185-3-93-147.ip.linodeusercontent.com:9200',
       log: 'trace',
       headers: {
         'Content-Type': 'application/json'
