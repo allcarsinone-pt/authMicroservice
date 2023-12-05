@@ -10,8 +10,7 @@ const express = require('express')
 const ElasticLogService = require('./src/controllers/services/ElasticLogService')
 dotenv.config()
 
-const app = makeApp(new PostgreUserRepository(process.env.DATABASE_URL), new ElasticLogService())
-
+const app = makeApp(new PostgreUserRepository(process.env.DATABASE_URL), new ElasticLogService(process.env.ELASTICSEARCH_URL))
 
 console.log(process.env.DATABASE_URL)
 

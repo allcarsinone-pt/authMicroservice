@@ -2,9 +2,9 @@ const { Client } = require('@elastic/elasticsearch');
 
 class ElasticLogService {
 
-  constructor () {
+  constructor (elasticURI) {
     this.elasticsearchClient = new Client({ 
-      node: 'http://localhost:9200',
+      node: elasticURI,
       log: 'trace',
       headers: {
         'Content-Type': 'application/json'
