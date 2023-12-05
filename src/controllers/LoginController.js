@@ -2,8 +2,6 @@ const LoginUseCase = require('../usecases/LoginUseCase/Login.usecase')
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
 
-
-
 class LoginController {
   constructor (userRepository, secret, logService) {
     this.userRepository = userRepository

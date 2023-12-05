@@ -33,7 +33,7 @@ class UsersUserController {
       const resultEdit = await validateAuthUseCase.execute(userAuth)
       
       if (!resultEdit.success) {
-        this.logService.execute("authEditService", resultEdit.error.message, "error")
+        this.logService.execute("AuthServiceGetUsers", resultEdit.error.message, "error")
         return response.status(500).json({ error: resultEdit.error.message })
       }
 
@@ -43,17 +43,17 @@ class UsersUserController {
       const user = await useCase.execute({})
 
       if (!user.success) {
-        this.logService.execute("authEditService", user.error.message, "error")
+        this.logService.execute("AuthServiceGetUsers", user.error.message, "error")
         if (user.error.message === 'No users found') {
           return response.status(400).json({ message: user.error.message })
         } else {
           return response.status(500).json({ message: 'Internal server error' })
         }
       }
-      this.logService.execute("authEditService", `${user.data.length} found`, "info")
+      this.logService.execute("AuthServiceGetUsers", `${user.data.length} users found`, "info")
       return response.status(201).json(user.data)
     } catch (error) {
-      this.logService.execute("authEditService", error.message, "error")
+      this.logService.execute("AuthServiceGetUsers", error.message, "error")
       return response.status(401).json({ error: error.message })
     }
   }

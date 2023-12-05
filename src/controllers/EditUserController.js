@@ -41,7 +41,7 @@ class EditUserController {
       const validateAuthUseCase = new ValidateAuthUseCase(this.userRepository)
       const resultEdit = await validateAuthUseCase.execute(userAuth)
       if (!resultEdit.success) {
-        LogService.execute({ from: 'authEditService', data: resultEdit.error.message, date: new Date(), status: 'error' }, this.logService)
+        LogService.execute({ from: 'AuthServiceEdit', data: resultEdit.error.message, date: new Date(), status: 'error' }, this.logService)
         return response.status(500).json({ error: resultEdit.error.message })
       }
 
@@ -49,7 +49,7 @@ class EditUserController {
 
       const { username, name, email, address, city, postalcode, mobilephone, role_id } = request.body
       if (!id || !email || !username || !name || !role_id) {
-        await LogService.execute({ from: 'authEditService', data: 'Missing fields', date: new Date(), status: 'error' }, this.logService)
+        await LogService.execute({ from: 'AuthServiceEdit', data: 'Missing fields', date: new Date(), status: 'error' }, this.logService)
         return response.status(400).json({ message: 'Missing fields' })
       }
 
