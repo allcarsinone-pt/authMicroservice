@@ -123,7 +123,7 @@ class PostgreUserRepository {
     return new User({ ...result.rows[0] })
   }
 
-  async resetDatabase () {
+  async resetDatabase() {
     const client = new pg.Client(this.baseURI)
     await client.connect()
 

@@ -15,7 +15,7 @@ class ElasticLogService {
     try {
       await this.elasticsearchClient.index({
         index: 'logs',
-        body: { service, message, timestamp: new Date(), level: levelType }
+        body: ({ service, message, timestamp: new Date(), level: levelType })
       })
     } catch (error) {
       console.error('Failed to index document:', error)

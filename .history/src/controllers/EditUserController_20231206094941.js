@@ -1,6 +1,9 @@
 const jwt = require('jsonwebtoken')
 const EditUserUseCase = require('../usecases/EditUserUseCase/EditUser.usecase')
+
 const ValidateAuthUseCase = require('../usecases/ValidateAuthUseCase/ValidateAuth.usecase')
+
+// Acoplado com o express. O req e o res têm de estar aqui ou não vale a pena complicar ?- perguntar ao professor de arquitetura
 
 /**
  * @class EditUserController
@@ -23,7 +26,7 @@ class EditUserController {
   async execute (request, response) {
     const { username, name, email, address, city, postalcode, mobilephone, role_id } = request.body
     if (!email || !username || !name || !role_id) {
-      this.logService.execute('AuthServiceEdit', 'Missing fields.', 'error')
+      this.logService.execute('AuthServiceEdit', 'Missing fields.', "error")
       return response.status(400).json({ message: 'Missing fields' })
     }
 

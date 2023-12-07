@@ -25,7 +25,7 @@ class ChangePwdUserController {
   async execute (req, res) {
     const { token, password, confirmPassword } = req.body
 
-    if (!token || !password || !confirmPassword) {
+    if (!token || !password, confirmPassword) {
       this.logService.execute('AuthServiceChangePwD', 'Missing fields.', 'error')
       return res.status(400).json({ message: 'Missing fields' })
     }

@@ -1,6 +1,9 @@
 const jwt = require('jsonwebtoken')
 const EditUserUseCase = require('../usecases/EditUserUseCase/EditUser.usecase')
+
 const ValidateAuthUseCase = require('../usecases/ValidateAuthUseCase/ValidateAuth.usecase')
+
+// Acoplado com o express. O req e o res têm de estar aqui ou não vale a pena complicar ?- perguntar ao professor de arquitetura
 
 /**
  * @class EditUserController
@@ -21,9 +24,10 @@ class EditUserController {
    * @returns response object from express
    */
   async execute (request, response) {
-    const { username, name, email, address, city, postalcode, mobilephone, role_id } = request.body
+
+    const { id, username, name, address, city, postalcode, mobilephone, email, role_id } = request.body
     if (!email || !username || !name || !role_id) {
-      this.logService.execute('AuthServiceEdit', 'Missing fields.', 'error')
+      this.logService.execute('AuthServiceEdit', 'Missing fields.', "error")
       return response.status(400).json({ message: 'Missing fields' })
     }
 
@@ -37,19 +41,22 @@ class EditUserController {
       const validateAuthUseCase = new ValidateAuthUseCase(this.userRepository)
       const resultEdit = await validateAuthUseCase.execute(userAuth)
       if (!resultEdit.success) {
-        this.LogService.execute({ from: 'AuthServiceEdit', data: resultEdit.error.message, date: new Date(), status: 'error' }, this.logService)
+        LogService.execute({ from: 'AuthServiceEdit', data: resultEdit.error.message, date: new Date(), status: 'error' }, this.logService)
         return response.status(500).json({ error: resultEdit.error.message })
       }
 
       const { id } = resultEdit.data
 
+      const { username, name, email, address, city, postalcode, mobilephone, role_id } = request.body
       if (!id || !email || !username || !name || !role_id) {
-        await this.LogService.execute({ from: 'AuthServiceEdit', data: 'Missing fields', date: new Date(), status: 'error' }, this.logService)
+        await LogService.execute({ from: 'AuthServiceEdit', data: 'Missing fields', date: new Date(), status: 'error' }, this.logService)
         return response.status(400).json({ message: 'Missing fields' })
       }
 
-      const useCase = new EditUserUseCase(this.userRepository)
-      const user = await useCase.execute({ id, username, name, address, city, postalcode, mobilephone, email, role_id })
+      const usecase = new EditUserUseCase(this.userRepository)
+      const user = await usecase.execute({
+        id, username, name, address, city, postalcode, mobilephone, email, role_id
+      })
 
       if (!user.success) {
         this.logService.execute('AuthServiceEdit', `${user.error.message}`, 'error')

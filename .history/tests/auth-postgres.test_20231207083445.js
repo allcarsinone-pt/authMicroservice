@@ -141,25 +141,26 @@ describe('Tests', () => {
   })
 
   describe('GET /users/delete', () => {
-    let token, tokenCopy, token2, token3, teste, teste2, teste3
+    let token, tokenCopy, token2, token3
     beforeAll(async () => {
       await userRepository.wipe()
       const salt = bcrypt.genSaltSync(10)
       const hash = bcrypt.hashSync('12345678', salt)
       const user = { email: 'test2@test.com', name: 'John Client', username: 'test_username1', password: hash, role_id: 3, id: 1 }
-      teste = await userRepository.create(new User(user))
+      await userRepository.create(new User(user))
       const user2 = { email: 'test3@test.com', name: 'Doe Manager', username: 'test_username2', password: hash, role_id: 2, id: 2 }
-      teste2 = await userRepository.create(new User(user2))
+      await userRepository.create(new User(user2))
       const user3 = { email: 'admin@test.com', name: 'Admin Doe', username: 'test_username3', password: hash, role_id: 1, id: 3 }
-      teste3 = await userRepository.create(new User(user3))
+      await userRepository.create(new User(user3))
       token = await request.post('/users/login').send({ email: 'test2@test.com', password: '12345678' })
       token = token.body.token
       token2 = await request.post('/users/login').send({ email: 'test3@test.com', password: '12345678' })
       token2 = token2.body.token
       token3 = await request.post('/users/login').send({ email: 'admin@test.com', password: '12345678' })
       token3 = token3.body.token
+
       tokenCopy = token
-      console.log(tokenCopy, token2, token3)
+      console.log(token, token2, token3)
     })
     beforeEach(async () => {
       token = tokenCopy
@@ -167,21 +168,15 @@ describe('Tests', () => {
 
     afterAll(async () => {
     })
+
     it('should return 400 when not admin and trying to remove another user', async () => {
       const response = await request.delete('/users/delete').set('Authorization', `Bearer ${token2}`).send({ id: teste3.id })
       expect(response.status).toBe(403)
       expect(response.body.message).toBe('Unauthorized delete')
     })
+
     it('should return 200 if user is removed', async () => {
       const response = await request.delete('/users/delete').set('Authorization', `Bearer ${token}`).send({ id: teste.id })
-      expect(response.status).toBe(200)
-    })
-    it('should return 400 if user is removed - Cannot remove last user', async () => {
-      const response = await request.delete('/users/delete').set('Authorization', `Bearer ${token3}`).send({ id: teste3.id })
-      expect(response.status).toBe(400)
-    })
-    it('should return 200 if user is removed', async () => {
-      const response = await request.delete('/users/delete').set('Authorization', `Bearer ${token3}`).send({ id: teste2.id })
       expect(response.status).toBe(200)
     })
   })

@@ -1,6 +1,9 @@
 const jwt = require('jsonwebtoken')
 const EditUserUseCase = require('../usecases/EditUserUseCase/EditUser.usecase')
+
 const ValidateAuthUseCase = require('../usecases/ValidateAuthUseCase/ValidateAuth.usecase')
+
+// Acoplado com o express. O req e o res têm de estar aqui ou não vale a pena complicar ?- perguntar ao professor de arquitetura
 
 /**
  * @class EditUserController

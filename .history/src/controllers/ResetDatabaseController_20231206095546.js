@@ -15,4 +15,5 @@ class ResetDatabaseController {
     }
   }
 }
+
 module.exports = ResetDatabaseController

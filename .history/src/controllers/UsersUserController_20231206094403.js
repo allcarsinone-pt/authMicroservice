@@ -31,11 +31,13 @@ class UsersUserController {
       const userAuth = jwt.verify(token, this.secret)
       const validateAuthUseCase = new ValidateAuthUseCase(this.userRepository)
       const resultEdit = await validateAuthUseCase.execute(userAuth)
-
+      
       if (!resultEdit.success) {
         this.logService.execute('AuthServiceGetUsers', resultEdit.error.message, 'error')
         return response.status(500).json({ error: resultEdit.error.message })
       }
+
+      // TODO: AQUI CONTROLAR AS PERMISSÕES DE VISUALIZAÇÃO
 
       const useCase = new UsersUseCase(this.userRepository)
       const user = await useCase.execute({})

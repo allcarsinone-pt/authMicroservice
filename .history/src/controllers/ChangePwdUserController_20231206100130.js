@@ -25,8 +25,8 @@ class ChangePwdUserController {
   async execute (req, res) {
     const { token, password, confirmPassword } = req.body
 
-    if (!token || !password || !confirmPassword) {
-      this.logService.execute('AuthServiceChangePwD', 'Missing fields.', 'error')
+    if (!token || !password, confirmPassword) {
+      this.logService.execute("AuthServiceChangePwD", 'Missing fields.', "error")
       return res.status(400).json({ message: 'Missing fields' })
     }
 
@@ -34,14 +34,14 @@ class ChangePwdUserController {
     const validateAuthUseCase = new ValidateAuthUseCase(this.userRepository)
     const result = await validateAuthUseCase.execute(userTok)
     if (!result.success) {
-      this.logService.execute('AuthServiceChangePwD', result.error.message, 'error')
+      this.logService.execute("AuthServiceChangePwD", result.error.message, "error")
       return res.status(500).json({ error: result.error.message })
     }
 
     const useCase = new ChangePwdUserUseCase(this.userRepository)
 
     if (password !== confirmPassword) {
-      this.logService.execute('AuthServiceChangePwD', 'Passwords do not match', 'error')
+      this.logService.execute("AuthServiceChangePwD", "Passwords do not match", "error")
       return res.status(400).json({ message: 'Passwords do not match' })
     }
 
@@ -52,14 +52,14 @@ class ChangePwdUserController {
     const user = await useCase.execute({ id, hashedPassword })
 
     if (!user.success) {
-      this.logService.execute('AuthServiceChangePwD', `${user.error.message}`, 'error')
+      this.logService.execute("AuthServiceChangePwD", `${user.error.message}`, "error")
       if (user.error.message === 'User not found') {
         return res.status(400).json({ message: user.error.message })
       } else {
         return res.status(500).json({ message: 'Internal server error' })
       }
     }
-    this.logService.execute('AuthServiceChangePwD', `${user.data.id} password changed`, 'info')
+    this.logService.execute("AuthServiceChangePwD", `${user.data.id} password changed`, "info")
 
     return res.status(201).json(user.data)
   }

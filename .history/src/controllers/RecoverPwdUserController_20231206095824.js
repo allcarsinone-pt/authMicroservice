@@ -3,6 +3,7 @@ const ValidateAuthUseCase = require('../usecases/ValidateAuthEmailUseCase/Valida
 const bcrypt = require('bcrypt') // ? - tem de estar aqui ? TIP: perguntar ao professor de arquitetura
 const jwt = require('jsonwebtoken')
 
+
 /**
  * @class ChangePwdUserController
  * @description Controller to changePwd an user
