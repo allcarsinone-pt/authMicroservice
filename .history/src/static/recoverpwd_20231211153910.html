@@ -57,7 +57,7 @@
             const email = document.getElementById('email').value;
 
             const response = await fetch('/users/recoverpwdemail', {
-                method: 'POST',
+                method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json'
                 },

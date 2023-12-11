@@ -17,7 +17,7 @@
         <li class="nav-item">
             <a class="nav-link" href="index.html">Home</a>
         </li>
-        <li class="nav-item">
+        <li class="nav-item active">
             <a class="nav-link" href="login.html">Login</a>
         </li>
         <li class="nav-item">
@@ -29,7 +29,7 @@
         <li class="nav-item">
             <a class="nav-link" href="users.html">Users</a>
         </li>
-        <li class="nav-item active">
+        <li class="nav-item">
             <a class="nav-link" href="recoverpwd.html">Recover password</a>
         </li>
         <li class="nav-item">
@@ -38,40 +38,44 @@
         </ul>
     </div>
   </nav>
-  
-  <div class="container">
-    <h1>Recover password User</h1>
-    <form method="POST" id='regform'>
 
+  <div class="container">
+    <h1>User Login</h1>
+    <form method="POST" id='loginform'>
       <div class="form-group">
-        <label for="email">Email</label>
-        <input type="email" class="form-control" id="email" name="email" placeholder="Enter email">
+        <label for="email">E-mail</label>
+        <input type="text" class="form-control" id="email" name="email" placeholder="Enter email">
       </div>
-      <button type="submit" class="btn btn-primary">Recover</button>
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input type="password" class="form-control" id="password" name="password" placeholder="Enter password">
+      </div>
+      <button type="submit" class="btn btn-primary">Login</button>
     </form>
 
     <script>
-        const form = document.getElementById('regform');
-        form.addEventListener('submit', async (event) => {
+        const form = document.getElementById('loginform');
+        form.addEventListener('submit', login);
+        async function login(event) {
             event.preventDefault();
             const email = document.getElementById('email').value;
-
-            const response = await fetch('/users/recoverpwdemail', {
+            const password = document.getElementById('password').value;
+            const response = await fetch('/users/login', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({ email: email })
+                body: JSON.stringify({ email, password })
             });
             const data = await response.json();
 
             if( response.status == 200 )
             {
               const { token } = data
-              window.localStorage.setItem('jwtTokenEmail', token);
+              window.localStorage.setItem('jwtToken', token);
+              
               console.log(token);
               alert(token);
-              window.location.href='recoverpwdemail.html';
             }
             else
             {
@@ -79,9 +83,10 @@
               const { error } = data
               alert(error);
             }
-        })
+        }
     </script>
   </div>
+
   <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>

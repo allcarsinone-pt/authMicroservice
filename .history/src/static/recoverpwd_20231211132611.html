@@ -56,6 +56,7 @@
             event.preventDefault();
             const email = document.getElementById('email').value;
 
+            //nativo do browser
             const response = await fetch('/users/recoverpwdemail', {
                 method: 'POST',
                 headers: {
@@ -64,21 +65,9 @@
                 body: JSON.stringify({ email: email })
             });
             const data = await response.json();
-
-            if( response.status == 200 )
-            {
-              const { token } = data
-              window.localStorage.setItem('jwtTokenEmail', token);
-              console.log(token);
-              alert(token);
-              window.location.href='recoverpwdemail.html';
-            }
-            else
-            {
-              console.log(data);
-              const { error } = data
-              alert(error);
-            }
+            console.log(data);
+            user = { token } = data
+            alert(user.token);
         })
     </script>
   </div>

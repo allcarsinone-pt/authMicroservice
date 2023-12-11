@@ -46,8 +46,7 @@ class ChangePwdUserController {
 
       // const hashedOldPassword = await bcrypt.hash(oldPassword, 10)
       if (await bcrypt.compare(oldPassword, resultEdit.data.password) === false) {
-        this.logService.execute('AuthServiceChangePwD', 'Old password do not match', 'error')
-        return res.status(400).json({ message: 'Old password do not match' })
+        return res.status(400).json({ message: 'Passwords do not match' })
       }
 
       const { id } = resultEdit.data

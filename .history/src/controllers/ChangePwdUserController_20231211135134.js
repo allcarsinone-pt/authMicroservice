@@ -29,8 +29,9 @@ class ChangePwdUserController {
     // Verify token to get user profile
     try {
       const token = req.headers.authorization.split(' ')[1]
-      const userAuth = jwt.verify(token, this.secret)
       const validateAuthUseCase = new ValidateAuthUseCase(this.userRepository)
+
+      const userAuth = jwt.verify(token, this.secret)
       const resultEdit = await validateAuthUseCase.execute(userAuth)
 
       if (!resultEdit.success) {
@@ -38,16 +39,10 @@ class ChangePwdUserController {
         return res.status(500).json({ error: resultEdit.error.message })
       }
 
-      const { oldPassword, password, confirmPassword } = req.body
+      const { password, confirmPassword } = req.body
       if (password !== confirmPassword) {
         this.logService.execute('AuthServiceChangePwD', 'Passwords do not match', 'error')
         return res.status(400).json({ message: 'Passwords do not match' })
-      }
-
-      // const hashedOldPassword = await bcrypt.hash(oldPassword, 10)
-      if (await bcrypt.compare(oldPassword, resultEdit.data.password) === false) {
-        this.logService.execute('AuthServiceChangePwD', 'Old password do not match', 'error')
-        return res.status(400).json({ message: 'Old password do not match' })
       }
 
       const { id } = resultEdit.data

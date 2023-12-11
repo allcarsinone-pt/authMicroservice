@@ -44,17 +44,12 @@ router.put('/changepwd', async (req, res) => {
   controller.execute(req, res)
 })
 
-router.put('/changepwdemail', async (req, res) => {
-  const controller = req.app.get('changePwdEmailUserController')
-  controller.execute(req, res)
-})
-
 router.put('/recoverpwd', async (req, res) => {
   const controller = req.app.get('recoverPwdUserController')
   controller.execute(req, res)
 })
 
-router.post('/recoverpwdemail', async (req, res) => {
+router.put('/recoverpwdemail', async (req, res) => {
   const controller = req.app.get('recoverPwdEmailUserController')
   controller.execute(req, res)
 })
