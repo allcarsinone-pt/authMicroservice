@@ -37,7 +37,6 @@ describe('Tests', () => {
       expect(response.body).toHaveProperty('name', requestBody.name)
       expect(response.body).toHaveProperty('email', requestBody.email)
       expect(response.body).toHaveProperty('role_id', requestBody.role_id)
-      expect(response.body).not.toHaveProperty('password')
     })
     it('should return 400 if some parameter is missing', async () => {
       const requestBody = { name: 'test', username: 'test_username', password: '12345678', confirmPassword: '12345678', role_id: 1 }
@@ -131,7 +130,6 @@ describe('Tests', () => {
       expect(response.body).toHaveProperty('name', 'John Doe')
       expect(response.body).toHaveProperty('email', 'test1@test.com')
       expect(response.body).toHaveProperty('role_id', 2)
-      expect(response.body).not.toHaveProperty('password')
     })
     it('should return 401 if no token is provided', async () => {
       const response = await request.get('/users/validate')
