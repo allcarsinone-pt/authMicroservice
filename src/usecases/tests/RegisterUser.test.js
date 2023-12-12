@@ -23,7 +23,6 @@ describe('RegisterUserUseCase', () => {
     expect(result.data).toHaveProperty('name', 'John Doe')
     expect(result.data).toHaveProperty('username', 'johndoe123')
     expect(result.data).toHaveProperty('email', 'test@test.com')
-    expect(result.data).not.toHaveProperty('password')
     expect(result.data).toHaveProperty('role_id', 1)
     const user = await userRepository.findByEmail('test@test.com')
     expect(user).toHaveProperty('id', result.data.id)

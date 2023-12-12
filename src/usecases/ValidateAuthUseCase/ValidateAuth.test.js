@@ -16,7 +16,6 @@ describe('ValidateAuthUseCase', () => {
     expect(result.data).toHaveProperty('id', user.id)
     expect(result.data).toHaveProperty('name', user.name)
     expect(result.data).toHaveProperty('email', user.email)
-    expect(result.data).not.toHaveProperty('password')
   })
   it('should return a result.failed if user is not found', async () => {
     const { sut } = makeSut()

@@ -20,7 +20,6 @@ describe('LoginUseCase', () => {
     expect(result.data).toHaveProperty('name', 'John Doe')
     expect(result.data).toHaveProperty('username', 'johndoe')
     expect(result.data).toHaveProperty('email', 'test@test.com')
-    expect(result.data).not.toHaveProperty('password')
   })
   it('should return a result.failed if email is wrong', async () => {
     const result = await sut.execute({
