@@ -60,7 +60,7 @@ class RecoverPwdUserController {
     }
 
     this.logService.execute('AuthServiceRecoverPwd', `${user.data.id} password recovered`, 'info')
-    return res.status(201).json(user)
+    return res.status(201).json(user.data)
   }
 }
 
