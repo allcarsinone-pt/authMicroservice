@@ -37,7 +37,6 @@ class EditUserController {
       const validateAuthUseCase = new ValidateAuthUseCase(this.userRepository)
       const resultEdit = await validateAuthUseCase.execute(userAuth)
       if (!resultEdit.success) {
-
         this.logService.execute('AuthServiceEdit', resultEdit.error.message, 'error')
         return response.status(500).json({ error: resultEdit.error.message })
       }
