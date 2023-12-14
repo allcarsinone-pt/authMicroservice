@@ -46,6 +46,7 @@ class UsersUserController {
         return response.status(403).json({ message: 'Unauthorized User' })
       }
 
+              
       const useCase = new UsersUseCase(this.userRepository)
       const user = await useCase.execute({})
 
