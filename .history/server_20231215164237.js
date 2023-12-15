@@ -23,6 +23,6 @@ app.use('/', express.static(path.join(__dirname, 'src/static')))
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: false }))
 
-app.listen(process.env.SERVER_PORT || 3001, () => {
-  console.log(`Server is running on http://localhost:${process.env.SERVER_PORT || 3001}/`)
+app.listen(process.env.SERVER_PORT, () => {
+  console.log(`Server is running on http://localhost:${process.env.SERVER_PORT}/`)
 })
