@@ -11,7 +11,6 @@ const ElasticLogService = require('./src/controllers/services/ElasticLogService'
 const LogMockAdapter = require('./src/adapters/LogMockAdapter')
 dotenv.config()
 
-// new LogMockAdapter())
 const app = makeApp(new PostgreUserRepository(process.env.DATABASE_URL), new ElasticLogService(process.env.ELASTICSEARCH_URL))
 
 console.log(process.env.DATABASE_URL)
