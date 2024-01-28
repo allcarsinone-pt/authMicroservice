@@ -1,6 +1,6 @@
 class LogMockAdapter {
-  async execute (service, message, levelType) {
-    console.log({ service, message, timestamp: new Date(), level: levelType })
+  async execute (context, message, levelType) {
+    console.log({ context, message, timestamp: Date.now(), level: levelType })
   }
 }
 
