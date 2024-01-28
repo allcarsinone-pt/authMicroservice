@@ -1,4 +1,8 @@
-FROM node:18.18.0-alpine
+FROM node:18.18.0
+
+RUN apt update
+
+RUN apt install wait-for-it
 
 WORKDIR /usr/src/app
 
@@ -8,4 +12,3 @@ RUN npm install
 
 COPY . .
 
-CMD ["npm","start"]
