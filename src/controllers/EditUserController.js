@@ -26,7 +26,7 @@ class EditUserController {
       this.logService.execute('AuthServiceEdit', 'Missing fields.', 'error')
       return response.status(400).json({ message: 'Missing fields' })
     }
-
+    
     if (!request.headers.authorization) {
       return response.status(401).json({ error: 'No token provided' })
     }
@@ -39,6 +39,12 @@ class EditUserController {
       if (!resultEdit.success) {
         this.logService.execute('AuthServiceEdit', resultEdit.error.message, 'error')
         return response.status(500).json({ error: resultEdit.error.message })
+      }
+
+      // Prevent not allowed users to access this route
+      if (resultEdit.data.blocked.includes(request.originalUrl)) {
+        this.logService.execute('AuthServiceEdit', 'Unauthorized User', 'error')
+        return response.status(403).json({ message: 'Unauthorized User' })
       }
 
       const { id } = resultEdit.data

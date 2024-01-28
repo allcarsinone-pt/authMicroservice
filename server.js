@@ -12,7 +12,8 @@ const LogMockAdapter = require('./src/adapters/LogMockAdapter')
 dotenv.config()
 
 // new LogMockAdapter())
-const app = makeApp(new PostgreUserRepository(process.env.DATABASE_URL), new RabbitMQLogAdapter(process.env.RABBITMQ_URL))
+const app = makeApp(new PostgreUserRepository(process.env.DATABASE_URL), new LogMockAdapter())
+//new RabbitMQLogAdapter(process.env.RABBITMQ_URL))
 
 console.log(process.env.DATABASE_URL)
 

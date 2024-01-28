@@ -33,7 +33,12 @@ class ValidateAuthController {
         return res.status(500).json({ error: result.error.message })
       }
       this.logService.execute('AuthServiceValidateAuth', `${result.data.id}-${result.data.role_id} validated`, 'info')
-      return res.status(200).json(result.data)
+      
+      const response = {
+        ...result.data
+      }
+
+      return res.status(200).json(response)
     } catch (error) {
       this.logService.execute('AuthServiceValidateAuth', error.message, 'error')
       return res.status(401).json({ error: error.message })
