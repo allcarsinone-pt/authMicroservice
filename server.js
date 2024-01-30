@@ -29,8 +29,8 @@ const https = require('https')
 const fs = require('fs')
 
 const options = {
-  key: fs.readFileSync('certificates/private-key.pem'),
-  cert: fs.readFileSync('certificates/certificate.crt')
+  key: fs.readFileSync('certificates/server.key'),
+  cert: fs.readFileSync('certificates/host.cert'),
 }
 const server = https.createServer(options, app)
 server.listen(process.env.SERVER_PORT || 3001, () => {
