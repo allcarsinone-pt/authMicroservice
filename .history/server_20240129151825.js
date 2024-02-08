@@ -17,21 +17,24 @@ dotenv.config()
 const app = makeApp(new PostgreUserRepository(process.env.DATABASE_URL), new LogMockAdapter())
 console.log(process.env.DATABASE_URL)
 app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument))
-
 // Midleware
-//app.use('/', express.static(path.join(__dirname, 'src/static')))
+app.use('/', express.static(path.join(__dirname, 'src/static')))
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: false }))
 //app.listen(process.env.SERVER_PORT || 3001, () => {
 //  console.log(`Server is running on http://localhost:${process.env.SERVER_PORT || 3001}/`)
 //})
 
+
+
+
+
 const https = require('https')
 const fs = require('fs')
 
 const options = {
-  key: fs.readFileSync(process.env.HTTPS_PRIVATE_KEY),
-  cert: fs.readFileSync(process.env.HTTPS_CERTIFICATE),
+  key: fs.readFileSync('path/to/private-key.pem'),
+  cert: fs.readFileSync('path/to/certificate.pem')
 }
 const server = https.createServer(options, app)
 server.listen(process.env.SERVER_PORT || 3001, () => {
