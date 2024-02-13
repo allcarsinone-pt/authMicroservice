@@ -1,4 +1,4 @@
-const ValidateAuthUseCase = require('./ValidateAuth.usecase')
+const ValidateAuthUseCase = require('../ValidateAuthUseCase/ValidateAuth.usecase')
 const InMemoryUserRepository = require('../../repositories/InMemoryUserRepository')
 const User = require('../../entities/User')
 

@@ -1,4 +1,4 @@
-const LoginUseCase = require('./Login.usecase')
+const LoginUseCase = require('../LoginUseCase/Login.usecase')
 const InMemoryUserRepository = require('../../repositories/InMemoryUserRepository')
 const User = require('../../entities/User')
 
