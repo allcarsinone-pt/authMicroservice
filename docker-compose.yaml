@@ -1,17 +1,23 @@
-version: '3.8'
+version: '3.3'
+
 services:
-  db:
-    image: postgres:latest
+
+  mongo:
+    image: mongo
     restart: always
+    container_name: mongo-docker
     environment:
-      - POSTGRES_USER=dss
-      - POSTGRES_PASSWORD=dss
-      - POSTGRES_DB=stand
+      MONGO_INITDB_ROOT_USERNAME: dss
+      MONGO_INITDB_ROOT_PASSWORD: dss
+      MONGODB_AUTH_DATABASE: allcarsinone
     ports:
-      - '5432:5432'
-    volumes: 
-      - db:/var/lib/postgresql/data
-      - ./database:/docker-entrypoint-initdb.d
+      - "27017:27017"
+    volumes:
+      - ./workspace:/workspace
+      - type: volume
+        source: mongodb_data_volume
+        target: /data/db
+
 volumes:
-  db:
+  mongodb_data_volume:
     driver: local
