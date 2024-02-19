@@ -22,10 +22,11 @@ app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument))
 //app.use('/', express.static(path.join(__dirname, 'src/static')))
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: false }))
-//app.listen(process.env.SERVER_PORT || 3001, () => {
-//  console.log(`Server is running on http://localhost:${process.env.SERVER_PORT || 3001}/`)
-//})
+app.listen(process.env.SERVER_PORT || 3001, () => {
+  console.log(`Server is running on http://localhost:${process.env.SERVER_PORT || 3001}/`)
+})
 
+/** Uncomment this code to use https
 const https = require('https')
 const fs = require('fs')
 
@@ -37,3 +38,4 @@ const server = https.createServer(options, app)
 server.listen(process.env.SERVER_PORT || 3001, () => {
   console.log(`Server is running on http://localhost:${process.env.SERVER_PORT || 3001}/`)
 })
+*/
