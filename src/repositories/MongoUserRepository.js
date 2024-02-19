@@ -49,7 +49,7 @@ class MongoUserRepository {
 
   async loadAllUsers () {
     try {
-      const users = (await UserModel.find()).map(user => new User({ ...user, id: user._id.toString() }))
+      const users = (await UserModel.find())
       return users
     } catch (error) {
       throw error
