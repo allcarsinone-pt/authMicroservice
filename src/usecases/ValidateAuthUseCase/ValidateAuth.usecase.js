@@ -17,10 +17,11 @@ class ValidateAuthUseCase {
   async execute (userObject) {
     const withErrorHandling = handleError(async () => {
       const user = await this.userRepository.findByEmail(userObject.email)
+      const blocked = await this.userRepository.getBlockedRoutes(userObject.id)
       if (!user || user.id !== userObject.id) {
         return Result.failed(new Error('Invalid authentication'))
       }
-      return Result.success(user.toJson())
+      return Result.success({...user.toJson(), blocked: blocked})
     })
     return withErrorHandling()
   }

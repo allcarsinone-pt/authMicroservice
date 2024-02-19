@@ -123,6 +123,31 @@ class PostgreUserRepository {
     return new User({ ...result.rows[0] })
   }
 
+  mapRows(rows) {
+    if (rows.length === 0) {
+      return [];
+    }
+    return rows.map(row => row.route);
+  }
+
+  async getBlockedRoutes (id) {
+    const client = new pg.Client(this.baseURI)
+    await client.connect()
+    const result = await client.query(`SELECT * FROM user_blocked_routes 
+                                       INNER JOIN routes ON user_blocked_routes.route_id = routes.id
+                                       WHERE user_blocked_routes.user_id = $1`, [id])
+    await client.end()
+
+    if (result.rows.length === 0) {
+      return undefined
+    }
+
+    const map = this.mapRows(result.rows)
+
+    return map
+    
+  }
+
   async resetDatabase () {
     const client = new pg.Client(this.baseURI)
     await client.connect()
