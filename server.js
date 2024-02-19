@@ -9,12 +9,16 @@ const bodyParser = require('body-parser')
 const express = require('express')
 const ElasticLogService = require('./src/controllers/services/ElasticLogService')
 const LogMockAdapter = require('./src/adapters/LogMockAdapter')
+
+const MongoUserRepository = require('./src/repositories/MongoUserRepository')
+const mongoose = require('mongoose')
+
 dotenv.config()
 
 // new LogMockAdapter())
 //const app = makeApp(new PostgreUserRepository(process.env.DATABASE_URL), new RabbitMQLogAdapter(process.env.RABBITMQ_URL))
 
-const app = makeApp(new PostgreUserRepository(process.env.DATABASE_URL), new LogMockAdapter())
+const app = makeApp(new MongoUserRepository(process.env.DATABASE_URL), new LogMockAdapter())
 console.log(process.env.DATABASE_URL)
 app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument))
 
@@ -22,9 +26,15 @@ app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument))
 //app.use('/', express.static(path.join(__dirname, 'src/static')))
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: false }))
-app.listen(process.env.SERVER_PORT || 3001, () => {
-  console.log(`Server is running on http://localhost:${process.env.SERVER_PORT || 3001}/`)
-})
+
+mongoose.connect(process.env.DATABASE_URL)
+  .then(() => {
+    console.log('Connected to MongoDB')
+    app.listen(process.env.SERVER_PORT || 3001, () => {
+      console.log(`Server is running on http://localhost:${process.env.SERVER_PORT || 3001}/`)
+    })
+  }
+  ).catch(err => console.log(err))
 
 /** Uncomment this code to use https
 const https = require('https')

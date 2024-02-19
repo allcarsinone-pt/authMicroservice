@@ -15,6 +15,7 @@ class ValidateAuthUseCase {
    * @returns a user object
    */
   async execute (userObject) {
+    console.log(userObject)
     const withErrorHandling = handleError(async () => {
       const user = await this.userRepository.findByEmail(userObject.email)
       const blocked = await this.userRepository.getBlockedRoutes(userObject.id)
