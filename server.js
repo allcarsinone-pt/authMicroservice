@@ -30,9 +30,25 @@ app.use(bodyParser.urlencoded({ extended: false }))
 mongoose.connect(process.env.DATABASE_URL)
   .then(() => {
     console.log('Connected to MongoDB')
-    app.listen(process.env.SERVER_PORT || 3001, () => {
+    
+    
+    //app.listen(process.env.SERVER_PORT || 3001, () => {
+    //  console.log(`Server is running on http://localhost:${process.env.SERVER_PORT || 3001}/`)
+    //})
+
+
+    const https = require('https')
+    const fs = require('fs')
+
+    const options = {
+      key: fs.readFileSync(process.env.HTTPS_PRIVATE_KEY),
+      cert: fs.readFileSync(process.env.HTTPS_CERTIFICATE),
+    }
+    const server = https.createServer(options, app)
+    server.listen(process.env.SERVER_PORT || 3001, () => {
       console.log(`Server is running on http://localhost:${process.env.SERVER_PORT || 3001}/`)
     })
+
   }
   ).catch(err => console.log(err))
 
