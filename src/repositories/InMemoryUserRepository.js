@@ -65,15 +65,6 @@ class InMemoryUserRepository {
   async findById (id) {
     return this.users.find((user) => user.id === id)
   }
-
-  /**
-   * @description Get all blocked routes from an user
-   * @param {*} id user id
-   * @returns blocked routes of an user
-   */
-  async getBlockedRoutes (id) {
-    return ['/users/edit', '/users/delete']
-  };
   
 }
 

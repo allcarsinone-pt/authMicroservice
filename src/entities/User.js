@@ -16,6 +16,7 @@ class User {
     this.city = user.city
     this.postalcode = user.postalcode
     this.mobilephone = user.mobilephone
+    this.blockedRoutes = user.blockedRoutes
     this.role_id = user.role_id
   }
 
@@ -30,6 +31,7 @@ class User {
       city: this.city,
       postalcode: this.postalcode,
       mobilephone: this.mobilephone,
+      blockedRoutes: this.blockedRoutes,
       role_id: this.role_id
     }
   }
@@ -46,7 +48,7 @@ class User {
     if (!user) {
       throw new Error('Invalid user')
     }
-    const { username, name, email, password, address, city, postalcode, mobilephone, role_id } = user
+    const { username, name, email, password, address, city, postalcode, mobilephone, blockedRoutes, role_id } = user
 
     if (name.length === 0) {
       throw new Error('Name is required')

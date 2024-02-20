@@ -21,6 +21,7 @@ class MongoUserRepository {
         city: newUser.city,
         postalcode: newUser.postalcode,
         mobilephone: newUser.mobilephone,
+        blockedRoutes: newUser.blockedRoutes,
         role_id: user.role_id
       })
     } catch (error) {
@@ -107,19 +108,6 @@ class MongoUserRepository {
     try {
       const user = await UserModel.findById(id).lean()
       return new User({ ...user, id: user._id.toString() })
-    } catch (error) {
-      throw error
-    }
-  }
-
-  async getBlockedRoutes (id) {
-    try {
-      const user = await UserModel.findById(id)
-      if (!user) return undefined
-
-      // Assuming you have a field in User schema for blocked routes
-      const blockedRoutes = user.blockedRoutes
-      return blockedRoutes
     } catch (error) {
       throw error
     }

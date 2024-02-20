@@ -42,7 +42,7 @@ class EditUserController {
       }
 
       // Prevent not allowed users to access this route
-      if (resultEdit.data.blocked.includes(request.originalUrl)) {
+      if (resultEdit.data.blockedRoutes.includes(request.originalUrl)) {
         this.logService.execute('AuthServiceEdit', 'Unauthorized User', 'error')
         return response.status(403).json({ message: 'Unauthorized User' })
       }
