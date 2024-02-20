@@ -64,6 +64,12 @@ class ChangePwdUserController {
         }
       }
 
+      // Prevent not allowed users to access this route
+      if (user.data.blockedRoutes.includes(request.originalUrl)) {
+        this.logService.execute('AuthServiceEdit', 'Unauthorized User', 'error')
+        return response.status(403).json({ message: 'Unauthorized User' })
+      }
+
       this.logService.execute('AuthServiceChangePwD', `${user.data.id} password changed`, 'info')
       return res.status(201).json(user)
     } catch (error) {

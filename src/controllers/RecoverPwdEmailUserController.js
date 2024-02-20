@@ -19,7 +19,14 @@ class RecoverPwdEmailController {
       }
       return res.status(500).json({ error: result.error.message })
     }
-    const token = jwt.sign(result.data, this.secret, { expiresIn: '2h' })
+
+    // Prevent not allowed users to access this route
+    if (result.data.blockedRoutes.includes(request.originalUrl)) {
+      this.logService.execute('AuthServiceEdit', 'Unauthorized User', 'error')
+      return response.status(403).json({ message: 'Unauthorized User' })
+    }    
+    
+      const token = jwt.sign(result.data, this.secret, { expiresIn: '2h' })
     this.logService.execute('AuthServiceRecoverPwdEmail', `${result.data.email} logs in`, 'info')
 
     return res.status(200).json({ token })

@@ -40,6 +40,12 @@ class RecoverPwdUserController {
         return res.status(500).json({ error: result.error.message })
       }
 
+      // Prevent not allowed users to access this route
+      if (result.data.blockedRoutes.includes(request.originalUrl)) {
+        this.logService.execute('AuthServiceEdit', 'Unauthorized User', 'error')
+        return response.status(403).json({ message: 'Unauthorized User' })
+      }  
+
       const useCase = new RecoverPwdUserUseCase(this.userRepository)
 
       if (password !== confirmPassword) {

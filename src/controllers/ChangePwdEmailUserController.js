@@ -38,6 +38,12 @@ class ChangePwdEmailUserController {
         return res.status(500).json({ error: resultEdit.error.message })
       }
 
+      // Prevent not allowed users to access this route
+      if (resultEdit.data.blockedRoutes.includes(request.originalUrl)) {
+        this.logService.execute('AuthServiceEdit', 'Unauthorized User', 'error')
+        return response.status(403).json({ message: 'Unauthorized User' })
+      }      
+
       const { password, confirmPassword } = req.body
       if (password !== confirmPassword) {
         this.logService.execute('AuthServiceChangePwDEmail', 'Passwords do not match', 'error')

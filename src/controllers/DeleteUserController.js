@@ -39,6 +39,12 @@ class DeleteUserController {
         return response.status(500).json({ error: resultAUth.error.message })
       }
 
+      // Prevent not allowed users to access this route
+      if (resultAUth.data.blockedRoutes.includes(request.originalUrl)) {
+        this.logService.execute('AuthServiceEdit', 'Unauthorized User', 'error')
+        return response.status(403).json({ message: 'Unauthorized User' })
+      }
+
       const { id } = request.body
       if (!id) {
         this.logService.execute('AuthServiceDelete', 'Missing fields', 'error')

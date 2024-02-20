@@ -50,6 +50,13 @@ class RegisterUserController {
         return response.status(500).json({ message: 'Internal server error' })
       }
     }
+  
+    // Prevent not allowed users to access this route
+    if (user.data.blockedRoutes.includes(request.originalUrl)) {
+      this.logService.execute('AuthServiceEdit', 'Unauthorized User', 'error')
+      return response.status(403).json({ message: 'Unauthorized User' })
+    }  
+
     this.logService.execute('AuthServiceRegisterUser', `${user.data.email}-${user.data.role_id} registered`, 'info')
     return response.status(201).json(user.data)
   }
