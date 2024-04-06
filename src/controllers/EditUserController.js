@@ -21,7 +21,8 @@ class EditUserController {
    * @returns response object from express
    */
   async execute (request, response) {
-    const { username, name, email, address, city, postalcode, mobilephone, role_id } = request.body
+    const { username} = request.params
+    const { name, email, address, city, postalcode, mobilephone, role_id } = request.body
     if (!email || !username || !name || !role_id) {
       this.logService.execute('AuthServiceEdit', 'Missing fields.', 'error')
       return response.status(400).json({ message: 'Missing fields' })
