@@ -1,5 +1,5 @@
 const express = require('express')
-const router = require('./routes/UserRouter')
+const usersRouter = require('./routes/UserRouter')
 const RegisterUserController = require('./controllers/RegisterUserController')
 const EditUserController = require('./controllers/EditUserController')
 const DeleteUserController = require('./controllers/DeleteUserController')
@@ -13,6 +13,9 @@ const LogMockAdapter = require('./adapters/LogMockAdapter')
 const cors = require('cors')
 const ResetDatabaseController = require('./controllers/ResetDatabaseController')
 const UsersUserController = require('./controllers/UsersUserController')
+
+const adminsRouter = require('./routes/AdminRouter')
+const authRouter = require('./routes/AuthRouter')
 function makeApp (userRepository, logAdapter = new LogMockAdapter()) {
   const app = express()
   app.use(cors())
@@ -29,7 +32,9 @@ function makeApp (userRepository, logAdapter = new LogMockAdapter()) {
   app.set('validateAuthController', new ValidateAuthController(userRepository, process.env.SECRET_JWT || 'secret', logAdapter))
   app.set('resetDatabaseController', new ResetDatabaseController(userRepository, process.env.SECRET_JWT || 'secret', logAdapter))
   app.set('usersUserController', new UsersUserController(userRepository, process.env.SECRET_JWT || 'secret', logAdapter))
-  app.use('/users', router)
+  app.use('/users', usersRouter)
+  app.use('/admins', adminsRouter)
+  app.use('/auth', authRouter)
   return app
 }
 module.exports = makeApp

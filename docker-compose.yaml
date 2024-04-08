@@ -6,7 +6,7 @@ services:
     environment:
       - POSTGRES_USER=dss
       - POSTGRES_PASSWORD=dss
-      - POSTGRES_DB=stand
+      - POSTGRES_DB=users
     ports:
       - '5432:5432'
     volumes: 

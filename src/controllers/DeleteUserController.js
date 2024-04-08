@@ -39,7 +39,7 @@ class DeleteUserController {
         return response.status(500).json({ error: resultAUth.error.message })
       }
 
-      const { id } = request.body
+      const { id } = request.params
       if (!id) {
         this.logService.execute('AuthServiceDelete', 'Missing fields', 'error')
         return response.status(400).json({ message: 'Missing fields' })
