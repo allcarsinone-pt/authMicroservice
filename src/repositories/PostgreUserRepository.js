@@ -21,7 +21,7 @@ class PostgreUserRepository {
   }
 
   async edit (user) {
-    const { id, username, name, email, address, city, postalcode, mobilephone, role_id } = user
+    const { id, username, name, email, address, city, postalcode, mobilephone, role_id, photo } = user
     const client = new pg.Client(this.baseURI)
     await client.connect()
 
@@ -32,11 +32,12 @@ class PostgreUserRepository {
     'postalcode = COALESCE($5, postalcode), ' +
     'mobilephone = COALESCE($6, mobilephone), ' +
     'email = COALESCE($7, email), ' +
-    'role_id = COALESCE($8, role_id) ' +
-    'WHERE id = $9 ' +
+    'role_id = COALESCE($8, role_id), ' +
+    'photo = COALESCE($9, photo) ' +
+    'WHERE id = $10 ' +
     'RETURNING *'
 
-    const values = [username, name, address, city, postalcode, mobilephone, email, role_id, id]
+    const values = [username, name, address, city, postalcode, mobilephone, email, role_id, photo, id]
     const result = await client.query(query, values)
     await client.end()
     return new User({ ...result.rows[0] })

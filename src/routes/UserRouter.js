@@ -21,6 +21,11 @@ router.delete('/:id', async (req, res) => {
   controller.execute(req, res)
 })
 
+router.put('/profile/photo', async (req, res) => {
+  const controller = req.app.get('changeProfilePhotoController')
+  controller.execute(req, res)
+});
+
 /**
  * TODO: Review this functions 
 

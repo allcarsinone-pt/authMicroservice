@@ -9,6 +9,7 @@ CREATE TABLE users (
     password VARCHAR(100) NOT NULL,
     address VARCHAR(255),
     city VARCHAR(50),
+    photo VARCHAR(100),
     postalcode VARCHAR(20),
     mobilephone VARCHAR(20),
     email VARCHAR(100) NOT NULL

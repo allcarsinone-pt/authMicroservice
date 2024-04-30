@@ -16,6 +16,7 @@ class User {
     this.city = user.city
     this.postalcode = user.postalcode
     this.mobilephone = user.mobilephone
+    this.photo = user.photo
     this.role_id = user.role_id
   }
 
@@ -30,6 +31,7 @@ class User {
       city: this.city,
       postalcode: this.postalcode,
       mobilephone: this.mobilephone,
+      photo: this.photo,
       role_id: this.role_id
     }
   }
