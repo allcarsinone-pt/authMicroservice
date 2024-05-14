@@ -12,3 +12,4 @@ RUN npm install
 
 COPY . .
 
+CMD ["wait-for-it", "db_auth:5432", "--", "node", "server.js"]

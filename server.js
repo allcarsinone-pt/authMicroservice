@@ -18,7 +18,7 @@ const app = makeApp(new PostgreUserRepository(process.env.DATABASE_URL), new Log
 console.log(process.env.DATABASE_URL)
 app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument))
 
-app.use(express.static(path.join(__dirname, 'src/static')))
+//app.use(express.static(path.join(__dirname, 'src/static')))
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: false }))
 app.listen(process.env.SERVER_PORT || 3001, () => {
