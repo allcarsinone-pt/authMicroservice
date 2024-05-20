@@ -6,6 +6,11 @@ router.get('/', async (req, res) => {
   controller.execute(req, res)
 })
 
+router.get('/:username', async (req, res) => {
+  const controller = req.app.get('getUserController')
+  controller.execute(req, res)
+})
+
 router.post('/', async (req, res) => {
   const controller = req.app.get('registerUserController')
   controller.execute(req, res)

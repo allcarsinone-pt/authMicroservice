@@ -17,7 +17,7 @@ const adminsRouter = require('./routes/AdminRouter')
 const authRouter = require('./routes/AuthRouter')
 const multerConfig = require('../config/multer-config')
 const ChangeProfilePhotoController = require('./controllers/ChangeProfilePhotoController')
-
+const GetUserController = require('./controllers/GetUserController')
 function makeApp (userRepository, logAdapter = new LogMockAdapter()) {
   const app = express()
   app.use(cors())
@@ -27,6 +27,7 @@ function makeApp (userRepository, logAdapter = new LogMockAdapter()) {
   app.set('registerUserController', new RegisterUserController(userRepository, logAdapter))
   app.set('changeProfilePhotoController', new ChangeProfilePhotoController(userRepository, process.env.SECRET_JWT || 'secret', logAdapter))
   app.set('editUserController', new EditUserController(userRepository, process.env.SECRET_JWT || 'secret', logAdapter))
+  app.set('getUserController', new GetUserController(userRepository, process.env.SECRET_JWT || 'secret', logAdapter))
   app.set('deleteUserController', new DeleteUserController(userRepository, process.env.SECRET_JWT || 'secret', logAdapter))
   app.set('changePwdUserController', new ChangePwdUserController(userRepository, process.env.SECRET_JWT || 'secret', logAdapter))
   app.set('changePwdEmailUserController', new ChangePwdEmailUserController(userRepository, process.env.SECRET_JWT || 'secret', logAdapter))
