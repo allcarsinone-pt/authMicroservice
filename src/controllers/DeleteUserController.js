@@ -39,8 +39,8 @@ class DeleteUserController {
         return response.status(500).json({ error: resultAUth.error.message })
       }
 
-      const { id } = request.params
-      if (!id) {
+      const { username } = request.params
+      if (!username) {
         this.logService.execute('AuthServiceDelete', 'Missing fields', 'error')
         return response.status(400).json({ message: 'Missing fields' })
       }
@@ -49,7 +49,7 @@ class DeleteUserController {
       const isAdmin = (resultAUth.data.role_id === ROLE_ADMIN)
 
       if (isAdmin) {
-        const userToDelete = await this.userRepository.findById(id)
+        const userToDelete = await this.userRepository.findByUsername(username)
         if (!userToDelete) {
           this.logService.execute('AuthServiceDelete', 'User not found', 'error')
         }
@@ -65,18 +65,18 @@ class DeleteUserController {
       }
 
       const useCase = new DeleteUserUseCase(this.userRepository)
-      const user = await useCase.execute({ id })
+      const user = await useCase.execute({ username })
 
       if (!user.success) {
-        this.logService.execute('AuthServiceDelete', `${user.error.message}`, 'error')
+        
         if (user.error.message === 'User not found') {
           return response.status(400).json({ message: user.error.message })
         } else {
           return response.status(500).json({ message: 'Internal server error' })
         }
       }
-      this.logService.execute('AuthServiceDelete', `${user.data.id} deleted`, 'error')
-      return response.status(200).json(user.data)
+      
+      return response.status(204).json({})
     } catch (error) {
       this.logService.execute('AuthServiceDelete', `${error.message}`, 'error')
       return response.status(401).json({ error: error.message })

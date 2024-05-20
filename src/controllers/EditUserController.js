@@ -41,12 +41,15 @@ class EditUserController {
         this.logService.execute('AuthServiceEdit', resultEdit.error.message, 'error')
         return response.status(500).json({ error: resultEdit.error.message })
       }
-
+      
+      // Remove this?
       // Prevent not allowed users to access this route
+      /** 
       if (resultEdit.data.blocked.includes(request.originalUrl)) {
         this.logService.execute('AuthServiceEdit', 'Unauthorized User', 'error')
         return response.status(403).json({ message: 'Unauthorized User' })
       }
+   */
 
       const { id } = resultEdit.data
 

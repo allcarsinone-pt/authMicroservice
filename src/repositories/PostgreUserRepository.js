@@ -113,6 +113,17 @@ class PostgreUserRepository {
     return new User({ ...result.rows[0] })
   }
 
+  async findByUsername (username) {
+    const client = new pg.Client(this.baseURI)
+    await client.connect()
+    const result = await client.query('SELECT * FROM users WHERE username = $1', [username])
+    await client.end()
+    if (!result.rows.length) {
+      return undefined
+    }
+    return new User({ ...result.rows[0] })
+  }
+
   async findById (id) {
     const client = new pg.Client(this.baseURI)
     await client.connect()

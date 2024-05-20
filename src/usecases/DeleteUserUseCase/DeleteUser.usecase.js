@@ -19,7 +19,7 @@ class DeleteUserUseCase {
      * function handleError is a util function to handle errors from async functions
      */
     const withErrorHandling = handleError(async () => {
-      const userFound = await this.userRepository.findById(deleteUserDto.id)
+      const userFound = await this.userRepository.findByUsername(deleteUserDto.username)
       if (!userFound) {
         return Result.failed(new Error('User not found'))
       }
