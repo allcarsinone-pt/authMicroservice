@@ -24,11 +24,14 @@ class UsersUserController {
    */
 
   async execute (request, response) {
+
     if (!request.headers.authorization) {
       return response.status(401).json({ error: 'No token provided' })
     }
+  
     // Verify token to get user profile
     try {
+      const { roleid }  = request.query
       const token = request.headers.authorization.split(' ')[1]
       const userAuth = jwt.verify(token, this.secret)
       const validateAuthUseCase = new ValidateAuthUseCase(this.userRepository)
@@ -39,7 +42,7 @@ class UsersUserController {
         return response.status(500).json({ error: resultEdit.error.message })
       }
 
-      // Prevent not allowed role_id to view users
+      // Prevent not allowed role_id to vi1ew users
       const isAdmin = (resultEdit.data.role_id === ROLE_ADMIN)
       if (!isAdmin) {
         this.logService.execute('AuthServiceGetUsers', 'Unauthorized User', 'error')
@@ -47,7 +50,7 @@ class UsersUserController {
       }
 
       const useCase = new UsersUseCase(this.userRepository)
-      const user = await useCase.execute({})
+      const user = await useCase.execute({roleid})
 
       if (!user.success) {
         this.logService.execute('AuthServiceGetUsers', user.error.message, 'error')

@@ -55,10 +55,12 @@ class PostgreUserRepository {
     return { id }
   }
 
-  async loadAllUsers () {
+  async loadAllUsers (role_id=null) {
     const client = new pg.Client(this.baseURI)
+    const query = role_id ? {query: 'SELECT * FROM users WHERE role_id = $1', values: [role_id]} : {query: 'SELECT * FROM users', values: []}
+   
     await client.connect()
-    const result = await client.query('SELECT * FROM users')
+    const result = await client.query(query.query, query.values)
     await client.end()
     if (!result.rows.length) {
       return undefined
