@@ -11,7 +11,7 @@ const ROLE_ADMIN = 1
  */
 
 class DeleteUserController {
-  constructor (userRepository, secret, logService) {
+  constructor(userRepository, secret, logService) {
     this.userRepository = userRepository
     this.secret = secret
     this.logService = logService
@@ -24,12 +24,12 @@ class DeleteUserController {
    * @returns response object from express
    */
 
-  async execute (request, response) {
+  async execute(request, response) {/*
     if (!request.headers.authorization) {
       return response.status(401).json({ error: 'No token provided' })
-    }
+    }*/
     // Verify token to get user profile
-    try {
+    try {/*
       const token = request.headers.authorization.split(' ')[1]
       const userAuth = jwt.verify(token, this.secret)
       const validateAuthUseCase = new ValidateAuthUseCase(this.userRepository)
@@ -38,13 +38,13 @@ class DeleteUserController {
         this.logService.execute('AuthServiceDelete', resultAUth.error.message, 'error')
         return response.status(500).json({ error: resultAUth.error.message })
       }
-
+*/
       const { username } = request.params
       if (!username) {
         this.logService.execute('AuthServiceDelete', 'Missing fields', 'error')
         return response.status(400).json({ message: 'Missing fields' })
       }
-
+      /*
       // Prevent delete last admin
       const isAdmin = (resultAUth.data.role_id === ROLE_ADMIN)
 
@@ -63,19 +63,19 @@ class DeleteUserController {
         this.logService.execute('AuthServiceDelete', 'Unauthorized delete', 'error')
         return response.status(403).json({ message: 'Unauthorized delete' })
       }
-
+*/
       const useCase = new DeleteUserUseCase(this.userRepository)
       const user = await useCase.execute({ username })
 
       if (!user.success) {
-        
+
         if (user.error.message === 'User not found') {
           return response.status(400).json({ message: user.error.message })
         } else {
           return response.status(500).json({ message: 'Internal server error' })
         }
       }
-      
+
       return response.status(204).json({})
     } catch (error) {
       this.logService.execute('AuthServiceDelete', `${error.message}`, 'error')

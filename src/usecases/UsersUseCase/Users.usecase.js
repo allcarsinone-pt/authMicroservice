@@ -4,7 +4,7 @@ const { handleError, Result } = require('../../util/Result')
  * @description Users use case of application
  */
 class UsersUseCase {
-  constructor (userRepository) {
+  constructor(userRepository) {
     this.userRepository = userRepository
   }
 
@@ -12,9 +12,9 @@ class UsersUseCase {
      * @description verifies if credentials are correct and returns all users
      * @param {*} loginDto email and password of user
      */
-  async execute (loginDto, hashAlgorithm) {
+  async execute(loginDto, hashAlgorithm) {
     const withErrorHandling = handleError(async () => {
-      const result = await this.userRepository.loadAllUsers(loginDto.roleid)
+      const result = await this.userRepository.loadAllUsers(1)
 
       return Result.success(result)
     })

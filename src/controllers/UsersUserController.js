@@ -10,7 +10,7 @@ const ROLE_ADMIN = 1
  */
 
 class UsersUserController {
-  constructor (userRepository, secret, logService) {
+  constructor(userRepository, secret, logService) {
     this.userRepository = userRepository
     this.secret = secret
     this.logService = logService
@@ -23,34 +23,34 @@ class UsersUserController {
    * @returns response object from express
    */
 
-  async execute (request, response) {
+  async execute(request, response) {
 
-    if (!request.headers.authorization) {
-      return response.status(401).json({ error: 'No token provided' })
-    }
-  
+    // if (!request.headers.authorization) {
+    //   return response.status(401).json({ error: 'No token provided' })
+    // }
+
     // Verify token to get user profile
     try {
-      const { roleid }  = request.query
-      const token = request.headers.authorization.split(' ')[1]
-      const userAuth = jwt.verify(token, this.secret)
-      const validateAuthUseCase = new ValidateAuthUseCase(this.userRepository)
-      const resultEdit = await validateAuthUseCase.execute(userAuth)
+      // const { roleid }  = request.query
+      // const token = request.headers.authorization.split(' ')[1]
+      // const userAuth = jwt.verify(token, this.secret)
+      // const validateAuthUseCase = new ValidateAuthUseCase(this.userRepository)
+      // const resultEdit = await validateAuthUseCase.execute(userAuth)
 
-      if (!resultEdit.success) {
-        this.logService.execute('AuthServiceGetUsers', resultEdit.error.message, 'error')
-        return response.status(500).json({ error: resultEdit.error.message })
-      }
+      //if (!resultEdit.success) {
+      //this.logService.execute('AuthServiceGetUsers', resultEdit.error.message, 'error')
+      //  return response.status(500).json({ error: resultEdit.error.message })
+      //}
 
       // Prevent not allowed role_id to vi1ew users
-      const isAdmin = (resultEdit.data.role_id === ROLE_ADMIN)
-      if (!isAdmin) {
-        this.logService.execute('AuthServiceGetUsers', 'Unauthorized User', 'error')
-        return response.status(403).json({ message: 'Unauthorized User' })
-      }
+      // const isAdmin = (resultEdit.data.role_id === ROLE_ADMIN)
+      //if (!isAdmin) {
+      //this.logService.execute('AuthServiceGetUsers', 'Unauthorized User', 'error')
+      //return response.status(403).json({ message: 'Unauthorized User' })
+      //}
 
       const useCase = new UsersUseCase(this.userRepository)
-      const user = await useCase.execute({roleid})
+      const user = await useCase.execute()
 
       if (!user.success) {
         this.logService.execute('AuthServiceGetUsers', user.error.message, 'error')
