@@ -32,7 +32,8 @@ class EditUserController {
           return response.status(401).json({ error: 'No token provided' })
         }*/
     // Verify token to get user profile
-    try {/*
+    try {
+      /*
       const token = request.headers.authorization.split(' ')[1]
       const userAuth = jwt.verify(token, this.secret)
       const validateAuthUseCase = new ValidateAuthUseCase(this.userRepository)
@@ -40,7 +41,7 @@ class EditUserController {
       if (!resultEdit.success) {
         this.logService.execute('AuthServiceEdit', resultEdit.error.message, 'error')
         return response.status(500).json({ error: resultEdit.error.message })
-      }*/
+      }
 
       // Remove this?
       // Prevent not allowed users to access this route

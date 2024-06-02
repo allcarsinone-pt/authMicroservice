@@ -55,7 +55,7 @@ class PostgreUserRepository {
     return {}
   }
 
-  async loadAllUsers(role_id = null) {
+  async loadAllUsers(role_id) {
     const client = new pg.Client(this.baseURI)
     const query = role_id ? { query: 'SELECT * FROM users WHERE role_id = $1', values: [role_id] } : { query: 'SELECT * FROM users', values: [] }
 

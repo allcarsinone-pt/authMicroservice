@@ -14,7 +14,7 @@ class UsersUseCase {
      */
   async execute(loginDto, hashAlgorithm) {
     const withErrorHandling = handleError(async () => {
-      const result = await this.userRepository.loadAllUsers(1)
+      const result = await this.userRepository.loadAllUsers()
       return Result.success(result || [])
     })
     return withErrorHandling()
