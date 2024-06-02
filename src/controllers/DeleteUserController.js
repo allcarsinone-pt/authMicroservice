@@ -72,6 +72,7 @@ class DeleteUserController {
         if (user.error.message === 'User not found') {
           return response.status(400).json({ message: user.error.message })
         } else {
+          console.log(user.error)
           return response.status(500).json({ message: 'Internal server error' })
         }
       }

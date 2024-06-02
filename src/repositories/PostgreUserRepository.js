@@ -52,7 +52,7 @@ class PostgreUserRepository {
     await client.query(query, values)
     console.log('User successfully deleted')
     await client.end()
-    return { id }
+    return {}
   }
 
   async loadAllUsers(role_id = null) {
