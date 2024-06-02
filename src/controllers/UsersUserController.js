@@ -54,14 +54,10 @@ class UsersUserController {
 
       if (!user.success) {
         this.logService.execute('AuthServiceGetUsers', user.error.message, 'error')
-        if (user.error.message === 'No users found') {
-          return response.status(400).json({ message: user.error.message })
-        } else {
-          return response.status(500).json({ message: 'Internal server error' })
-        }
+        return response.status(500).json({ message: 'Internal server error' })
       }
       this.logService.execute('AuthServiceGetUsers', `${user.data.length} users found`, 'info')
-      return response.status(201).json(user.data)
+      return response.status(200).json(user.data)
     } catch (error) {
       this.logService.execute('AuthServiceGetUsers', error.message, 'error')
       return response.status(401).json({ error: error.message })

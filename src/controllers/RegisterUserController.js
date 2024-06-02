@@ -8,7 +8,7 @@ const bcrypt = require('bcrypt') // ? - tem de estar aqui ? TIP: perguntar ao pr
  */
 
 class RegisterUserController {
-  constructor (userRepository, logService) {
+  constructor(userRepository, logService) {
     this.userRepository = userRepository
     this.logService = logService
   }
@@ -20,8 +20,9 @@ class RegisterUserController {
    * @returns response object from express
    */
 
-  async execute (request, response) {
+  async execute(request, response) {
     let { username, name, email, password, confirmPassword, address, city, postalcode, mobilephone, role_id } = request.body
+    console.log(request.body)
     if (!email || !username || !name || !password || !confirmPassword || !role_id) {
       this.logService.execute('AuthServiceRegisterUser', 'Missing fields.', 'error')
       return response.status(400).json({ message: 'Missing fields' })
