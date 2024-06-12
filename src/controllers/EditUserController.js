@@ -55,7 +55,7 @@ class EditUserController {
    
 
       const useCase = new EditUserUseCase(this.userRepository)
-      const user = await useCase.execute({ id, username, name, address, city, postalcode, mobilephone, email, role_id })
+      const user = await useCase.execute({ username, name, address, city, postalcode, mobilephone, email, role_id })
 
       if (!user.success) {
         this.logService.execute('AuthServiceEdit', `${user.error.message}`, 'error')

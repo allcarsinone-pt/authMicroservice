@@ -19,13 +19,13 @@ class EditUserUseCase {
      * function handleError is a util function to handle errors from async functions
      */
     const withErrorHandling = handleError(async () => {
-      const userFound = await this.userRepository.findById(editUserDto.id)
+      const userFound = await this.userRepository.findByUsername(editUserDto.username)
       if (!userFound) {
         return Result.failed(new Error('User not found'))
       }
 
-      let user = User.edit(editUserDto)
-      user = await this.userRepository.edit(user)
+      
+      user = await this.userRepository.edit(editUserDto)
       return Result.success(user.toJson())
     })
     return withErrorHandling()

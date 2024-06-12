@@ -25,8 +25,7 @@ class PostgreUserRepository {
     const client = new pg.Client(this.baseURI)
     await client.connect()
 
-    const query = 'UPDATE users SET  username = COALESCE($1, username), ' +
-      'name = COALESCE($2, name), ' +
+    const query = 'UPDATE users SET name = COALESCE($2, name), ' +
       'address = COALESCE($3, address), ' +
       'city = COALESCE($4, city), ' +
       'postalcode = COALESCE($5, postalcode), ' +
@@ -34,10 +33,10 @@ class PostgreUserRepository {
       'email = COALESCE($7, email), ' +
       'role_id = COALESCE($8, role_id), ' +
       'photo = COALESCE($9, photo) ' +
-      'WHERE id = $10 ' +
+      'WHERE username = $1 ' +
       'RETURNING *'
 
-    const values = [username, name, address, city, postalcode, mobilephone, email, role_id, photo, id]
+    const values = [username, name, address, city, postalcode, mobilephone, email, role_id, photo]
     const result = await client.query(query, values)
     await client.end()
     return new User({ ...result.rows[0] })
