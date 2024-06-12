@@ -52,10 +52,7 @@ class EditUserController {
       }
    */
 
-      if (!id || !email || !username || !name || !role_id) {
-        this.logService.execute('AuthServiceEdit', 'Missing fields', 'error')
-        return response.status(400).json({ message: 'Missing fields' })
-      }
+   
 
       const useCase = new EditUserUseCase(this.userRepository)
       const user = await useCase.execute({ id, username, name, address, city, postalcode, mobilephone, email, role_id })
