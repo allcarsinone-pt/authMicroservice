@@ -25,7 +25,7 @@ class EditUserUseCase {
       }
 
       
-      user = await this.userRepository.edit(editUserDto)
+      const user = await this.userRepository.edit(editUserDto)
       return Result.success(user.toJson())
     })
     return withErrorHandling()
