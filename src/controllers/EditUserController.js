@@ -52,8 +52,6 @@ class EditUserController {
       }
    */
 
-      const { id } = resultEdit.data
-
       if (!id || !email || !username || !name || !role_id) {
         this.logService.execute('AuthServiceEdit', 'Missing fields', 'error')
         return response.status(400).json({ message: 'Missing fields' })
