@@ -5,11 +5,11 @@ const bcrypt = require('bcrypt')
 
 config()
 
-const main = async () => {
+async function authSeed(BASE_URL) {
 
     const users = []
 
-    for (let i = 0; i < 2000; i++) {
+    for (let i = 0; i < 5000; i++) {
         passwordHash = bcrypt.hashSync(`password${i}`, 10)
         address = ['Rua de baixo nº21',
             'Rua Norton de Matos nº4',
@@ -52,15 +52,15 @@ const main = async () => {
             photo: ``,
             role_id: Math.floor(Math.random() * 3 + 1)
         })
-        console.log(user)
+
         users.push(user)
     }
 
-    const userRepository = new PostgreUserRepository("postgres://dss:dss@localhost:5432/users")
+    const userRepository = new PostgreUserRepository(BASE_URL)
     for (let i = 0; i < users.length; i++) {
         await userRepository.create(users[i])
     }
 
 }
 
-main()
+module.exports = authSeed;
